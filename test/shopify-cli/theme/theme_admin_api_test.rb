@@ -31,7 +31,7 @@ module ShopifyCLI
           path: path,
         }
 
-        expect_admin_api_request_with_params(request_params)
+        expect_correct_request_arguments(request_params)
 
         @api_client.get(
           path: path
@@ -50,7 +50,7 @@ module ShopifyCLI
           body: body,
         }
 
-        expect_admin_api_request_with_params(request_params)
+        expect_correct_request_arguments(request_params)
 
         @api_client.put(
           path: path,
@@ -70,7 +70,7 @@ module ShopifyCLI
           body: body,
         }
 
-        expect_admin_api_request_with_params(request_params)
+        expect_correct_request_arguments(request_params)
 
         @api_client.post(
           path: path,
@@ -85,7 +85,7 @@ module ShopifyCLI
           path: path,
         }
 
-        expect_admin_api_request_with_params(request_params)
+        expect_correct_request_arguments(request_params)
 
         @api_client.delete(
           path: path
@@ -124,7 +124,7 @@ module ShopifyCLI
           path: path,
         }
 
-        expect_admin_api_request_with_params(request_params)
+        expect_correct_request_arguments(request_params)
 
         @api_client.post(
           path: path,
@@ -229,29 +229,9 @@ module ShopifyCLI
         refute(@api_client.send(:unauthorized_response?, error))
       end
 
-      def test_theme_access_api_is_used_with_theme_access_password
-        shop = "testshop.myshopify.io"
-        password = "shptka_XXX"
-        Environment.expects(:store).returns(shop)
-        Environment.expects(:admin_auth_token).returns(password)
-        api_client = ThemeAdminAPI.new(@ctx)
-        request_params = {
-          method: "POST",
-          path: "themes.json",
-          query: "query",
-          body: JSON.generate({ theme: {} }),
-          token: password,
-        }
-
-        ShopifyCLI::ThemeAccessAPI.expects(:rest_request)
-          .with(@ctx, shop: shop, api_version: @api_version, **request_params)
-
-        api_client.send(:rest_request, **request_params)
-      end
-
       private
 
-      def expect_admin_api_request_with_params(request_params)
+      def expect_correct_request_arguments(request_params)
         ShopifyCLI::AdminAPI.expects(:rest_request)
           .with(@ctx, shop: @shop, api_version: @api_version, **request_params)
       end

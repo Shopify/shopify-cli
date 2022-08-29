@@ -27,7 +27,7 @@ module Theme
       end
 
       def shop
-        ShopifyCLI::Theme::ThemeAdminAPI.new(@ctx).get_shop_or_abort
+        ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
       end
     end
   end

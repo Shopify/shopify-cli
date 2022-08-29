@@ -69,15 +69,11 @@ module ShopifyCLI
         # Checksums of assets with errors.
         @error_checksums = []
 
-        # Do not use the throttler when --stable is passed or a Theme Access password is set
-        # (Theme Access API is not compatible yet with bulks)
-        active_throttler = !stable && !Environment.theme_access_password?
-
         # Initialize `api_client` on main thread
         @api_client = ThemeAdminAPIThrottler.new(
           @ctx,
           ThemeAdminAPI.new(@ctx, @theme.shop),
-          active_throttler
+          !stable
         )
       end
 
