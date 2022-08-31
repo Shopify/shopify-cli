@@ -19,6 +19,14 @@ module Theme
         parser.on("--theme-editor-sync") { flags[:editor_sync] = true }
         parser.on("--stable") { flags[:stable] = true }
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
+        parser.on("-o", "--only=PATTERN", Conversions::IncludeGlob) do |pattern|
+          flags[:includes] ||= []
+          flags[:includes] |= pattern
+        end
+        parser.on("-x", "--ignore=PATTERN", Conversions::IgnoreGlob) do |pattern|
+          flags[:ignores] ||= []
+          flags[:ignores] |= pattern
+        end
       end
 
       def call(_args, name)
@@ -28,6 +36,10 @@ module Theme
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
 
+        include_filter = ShopifyCLI::Theme::IncludeFilter.new(root, options.flags[:includes])
+        ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
+        ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
+        
         ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end

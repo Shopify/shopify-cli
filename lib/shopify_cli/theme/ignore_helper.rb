@@ -18,6 +18,10 @@ module ShopifyCLI
           ignored_by_ignore_filter?(path) || ignored_by_include_filter?(path)
         end
 
+        def ignore_regexes
+          #TODO
+        end
+
         private
 
         def ignored_by_ignore_filter?(path)

@@ -42,9 +42,24 @@ module ShopifyCLI
           editor_sync: false,
           stable: false,
           mode: ReloadMode.default,
-          &block
+          include_filter: nil,
+          exclude_filer: nil,
+            &block
         )
-          instance.setup(ctx, root, host, theme, port, poll, editor_sync, stable, mode, &block)
+          instance.setup(
+            ctx, 
+            root, 
+            host, 
+            theme, 
+            port, 
+            poll, 
+            editor_sync, 
+            stable, 
+            mode, 
+            include_filter, 
+            exclude_filer, 
+            &block
+          )
           instance.start
         end
 
@@ -54,7 +69,20 @@ module ShopifyCLI
       end
 
       # rubocop:disable Metrics/ParameterLists
-      def setup(ctx, root, host, theme_identifier, port, poll, editor_sync, stable, mode, &block)
+      def setup(
+        ctx, 
+        root, 
+        host, 
+        theme_identifier, 
+        port, 
+        poll, 
+        ditor_sync, 
+        stable, 
+        mode, 
+        include_filter, 
+        exclude_filer, 
+        &block
+      )
         @ctx = ctx
         @root = root
         @host = host
@@ -65,6 +93,8 @@ module ShopifyCLI
         @stable = stable
         @mode = mode
         @block = block
+        @include_filter: include_filter,
+        @exclude_filer: exclude_filer,
       end
 
       def start
@@ -151,10 +181,6 @@ module ShopifyCLI
         end
       end
 
-      def ignore_filter
-        @ignore_filter ||= IgnoreFilter.from_path(root)
-      end
-
       def theme
         @theme ||= if theme_identifier
           theme = ShopifyCLI::Theme::Theme.find_by_identifier(ctx, root: root, identifier: theme_identifier)
@@ -168,6 +194,7 @@ module ShopifyCLI
         @syncer ||= Syncer.new(
           ctx,
           theme: theme,
+          include_filter: include_filter,
           ignore_filter: ignore_filter,
           overwrite_json: !editor_sync,
           stable: stable
@@ -178,6 +205,7 @@ module ShopifyCLI
         @watcher ||= Watcher.new(
           ctx,
           theme: theme,
+          include_filter: include_filter,
           ignore_filter: ignore_filter,
           syncer: syncer,
           poll: poll
@@ -209,7 +237,7 @@ module ShopifyCLI
       # Hooks
 
       def broadcast_hooks
-        file_handler = Hooks::FileChangeHook.new(ctx, theme: theme, ignore_filter: ignore_filter)
+        file_handler = Hooks::FileChangeHook.new(ctx, theme: theme, include_filter: include_filter, ignore_filter: ignore_filter)
         [file_handler]
       end
 

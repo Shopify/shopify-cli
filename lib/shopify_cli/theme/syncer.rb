@@ -7,7 +7,6 @@ require "forwardable"
 
 require_relative "syncer/checksums"
 require_relative "syncer/error_reporter"
-require_relative "syncer/ignore_helper"
 require_relative "syncer/json_delete_handler"
 require_relative "syncer/json_update_handler"
 require_relative "syncer/merger"
@@ -15,6 +14,7 @@ require_relative "syncer/operation"
 require_relative "syncer/standard_reporter"
 require_relative "syncer/unsupported_script_warning"
 require_relative "theme_admin_api"
+require_relative "ignore_helper"
 require_relative "theme_admin_api_throttler"
 
 module ShopifyCLI

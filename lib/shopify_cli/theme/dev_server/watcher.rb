@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 require "shopify_cli/file_system_listener"
 require "forwardable"
+require "shopify_cli/theme/ignore_helper"
 
 module ShopifyCLI
   module Theme
@@ -8,16 +9,19 @@ module ShopifyCLI
       # Watches for file changes and publish events to the theme
       class Watcher
         extend Forwardable
+        include IgnoreHelper
 
+        attr_accessor :include_filter, :ignore_filter
         def_delegators :@listener, :add_observer, :changed, :notify_observers
 
-        def initialize(ctx, theme:, syncer:, ignore_filter: nil, poll: false)
+        def initialize(ctx, theme:, syncer:, ignore_filter: nil, include_filter: nil, poll: false)
           @ctx = ctx
           @theme = theme
           @syncer = syncer
           @ignore_filter = ignore_filter
+          @include_filter = include_filter
           @listener = FileSystemListener.new(root: @theme.root, force_poll: poll,
-            ignore_regex: @ignore_filter&.regexes)
+            ignore_regex: ignore_regexes) # TODO include regexes along with this? put it in the ignore helper -- ignore_regexes
 
           add_observer(self, :upload_files_when_changed)
         end
