@@ -21,6 +21,7 @@ require_relative "dev_server/hooks/file_change_hook"
 
 require_relative "development_theme"
 require_relative "ignore_filter"
+require_relative "include_filter"
 require_relative "syncer"
 
 module ShopifyCLI
@@ -29,7 +30,7 @@ module ShopifyCLI
       include Singleton
 
       attr_reader :app, :stopped, :ctx, :root, :host, :theme_identifier, :port, :poll, :editor_sync, :stable, :mode,
-        :block
+        :block, :includes, :ignores
 
       class << self
         def start(
@@ -42,9 +43,24 @@ module ShopifyCLI
           editor_sync: false,
           stable: false,
           mode: ReloadMode.default,
+          includes: nil,
+          ignores: nil,
           &block
         )
-          instance.setup(ctx, root, host, theme, port, poll, editor_sync, stable, mode, &block)
+          instance.setup(
+            ctx,
+            root,
+            host,
+            theme,
+            port,
+            poll,
+            editor_sync,
+            stable,
+            mode,
+            includes,
+            ignores,
+            &block
+          )
           instance.start
         end
 
@@ -54,7 +70,20 @@ module ShopifyCLI
       end
 
       # rubocop:disable Metrics/ParameterLists
-      def setup(ctx, root, host, theme_identifier, port, poll, editor_sync, stable, mode, &block)
+      def setup(
+        ctx,
+        root,
+        host,
+        theme_identifier,
+        port,
+        poll,
+        editor_sync,
+        stable,
+        mode,
+        includes,
+        ignores,
+        &block
+      )
         @ctx = ctx
         @root = root
         @host = host
@@ -64,6 +93,8 @@ module ShopifyCLI
         @editor_sync = editor_sync
         @stable = stable
         @mode = mode
+        @includes = includes
+        @ignores = ignores
         @block = block
       end
 
@@ -154,10 +185,6 @@ module ShopifyCLI
         end
       end
 
-      def ignore_filter
-        @ignore_filter ||= IgnoreFilter.from_path(root)
-      end
-
       def theme
         @theme ||= if theme_identifier
           theme = ShopifyCLI::Theme::Theme.find_by_identifier(ctx, root: root, identifier: theme_identifier)
@@ -171,6 +198,7 @@ module ShopifyCLI
         @syncer ||= Syncer.new(
           ctx,
           theme: theme,
+          include_filter: include_filter,
           ignore_filter: ignore_filter,
           overwrite_json: !editor_sync,
           stable: stable
@@ -201,6 +229,16 @@ module ShopifyCLI
           .with_syncer(syncer)
       end
 
+      def ignore_filter
+        @ignore_filter ||= IgnoreFilter.from_path(root).tap do |filter|
+          filter.add_patterns(ignores) if ignores
+        end
+      end
+
+      def include_filter
+        @include_filter ||= ShopifyCLI::Theme::IncludeFilter.new(root, includes)
+      end
+
       def logger
         @logger ||= if ctx.debug?
           WEBrick::Log.new(nil, WEBrick::BasicLog::INFO)
@@ -212,7 +250,8 @@ module ShopifyCLI
       # Hooks
 
       def broadcast_hooks
-        file_handler = Hooks::FileChangeHook.new(ctx, theme: theme, ignore_filter: ignore_filter)
+        file_handler = Hooks::FileChangeHook.new(ctx, theme: theme, include_filter: include_filter,
+          ignore_filter: ignore_filter)
         [file_handler]
       end
 

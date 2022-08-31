@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require "test_helper"
-require "shopify_cli/theme/syncer/ignore_helper"
+require "shopify_cli/theme/ignore_helper"
 
 module ShopifyCLI
   module Theme

@@ -141,16 +141,15 @@ module ShopifyCLI
         end
 
         def teardown
-          TestHelpers::Singleton.reset_singleton!(dev_server)
+          TestHelpers::Singleton.reset_singleton!(Extension::DevServer.instance)
         end
 
         private
 
         def dev_server(identifier: nil)
-          host,
-          port, poll, editor_sync, stable, mode = nil
+          host, port, poll, editor_sync, stable, mode, ignores, includes = nil
           server = Extension::DevServer.instance
-          server.setup(ctx, root, host, identifier, port, poll, editor_sync, stable, mode)
+          server.setup(ctx, root, host, identifier, port, poll, editor_sync, stable, mode, ignores, includes)
           server.project = project
           server.specification_handler = specification_handler
           server

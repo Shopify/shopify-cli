@@ -1,15 +1,21 @@
 # frozen_string_literal: true
 require_relative "../hot_reload/remote_file_reloader"
 require_relative "../hot_reload/remote_file_deleter"
+require "shopify_cli/theme/ignore_helper"
 
 module ShopifyCLI
   module Theme
     class DevServer
       module Hooks
         class FileChangeHook
-          def initialize(ctx, theme:, ignore_filter: nil)
+          include ShopifyCLI::Theme::IgnoreHelper
+
+          attr_reader :include_filter, :ignore_filter
+
+          def initialize(ctx, theme:, include_filter: nil, ignore_filter: nil)
             @ctx = ctx
             @theme = theme
+            @include_filter = include_filter
             @ignore_filter = ignore_filter
           end
 
@@ -17,11 +23,11 @@ module ShopifyCLI
             @streams = streams
             files = (modified + added)
               .map { |f| @theme[f] }
-              .reject { |f| @ignore_filter&.ignore?(f.relative_path) }
+              .reject { |f| ignore_file?(f) }
             files -= liquid_css_files = files.select(&:liquid_css?)
             deleted_files = removed
               .map { |f| @theme[f] }
-              .reject { |f| @ignore_filter&.ignore?(f.relative_path) }
+              .reject { |f| ignore_file?(f) }
 
             remote_delete(deleted_files) unless deleted_files.empty?
             reload_page(removed) unless deleted_files.empty?
