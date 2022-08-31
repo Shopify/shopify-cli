@@ -1,6 +1,6 @@
 # Shopify CLI 2.0
   
-  <a href=""><img src="https://github.com/shopify/shopify-cli/workflows/CI/badge.svg" alt="Shopify"></a>
+  <a href="https://github.com/Shopify/shopify-cli/actions/workflows/shopify.yml"><img src="https://github.com/shopify/shopify-cli/actions/workflows/shopify.yml/badge.svg" alt="Shopify"></a>
   <img src="https://img.shields.io/github/v/release/shopify/shopify-cli?include_prereleases&style=flat-square" alt="Latest Version">
   <img src="https://img.shields.io/github/forks/shopify/shopify-cli?style=flat-square" alt="GitHub forks">
   <img src="https://img.shields.io/github/stars/shopify/shopify-cli?style=flat-square" alt="GitHub stars">
