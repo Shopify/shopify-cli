@@ -22,7 +22,7 @@ module ShopifyCLI
     class Syncer
       extend Forwardable
 
-      include IgnoreHelper
+      include ShopifyCLI::Theme::IgnoreHelper
       include JsonDeleteHandler
       include JsonUpdateHandler
 

@@ -29,7 +29,7 @@ module ShopifyCLI
       include Singleton
 
       attr_reader :app, :stopped, :ctx, :root, :host, :theme_identifier, :port, :poll, :editor_sync, :stable, :mode,
-        :block
+        :block, :include_filter, :ignore_filter
 
       class << self
         def start(
@@ -42,9 +42,9 @@ module ShopifyCLI
           editor_sync: false,
           stable: false,
           mode: ReloadMode.default,
-          include_filter: nil,
-          exclude_filer: nil,
-            &block
+          includes: nil,
+          ignores: nil,
+          &block
         )
           instance.setup(
             ctx, 
@@ -56,8 +56,8 @@ module ShopifyCLI
             editor_sync, 
             stable, 
             mode, 
-            include_filter, 
-            exclude_filer, 
+            includes, 
+            ignores, 
             &block
           )
           instance.start
@@ -79,8 +79,8 @@ module ShopifyCLI
         ditor_sync, 
         stable, 
         mode, 
-        include_filter, 
-        exclude_filer, 
+        includes, 
+        ignores, 
         &block
       )
         @ctx = ctx
@@ -93,8 +93,10 @@ module ShopifyCLI
         @stable = stable
         @mode = mode
         @block = block
-        @include_filter: include_filter,
-        @exclude_filer: exclude_filer,
+
+        @include_filter = ShopifyCLI::Theme::IncludeFilter.new(root, includes)
+        @ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
+        @ignore_filter.add_patterns(ignores) if ignores
       end
 
       def start
@@ -205,7 +207,6 @@ module ShopifyCLI
         @watcher ||= Watcher.new(
           ctx,
           theme: theme,
-          include_filter: include_filter,
           ignore_filter: ignore_filter,
           syncer: syncer,
           poll: poll

@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/dev_server"
 require "project_types/theme/commands/common/root_helper"
+require "shopify_cli/theme/ignore_filter"
+require "shopify_cli/theme/include_filter"
+require "project_types/theme/conversions/include_glob"
+require "project_types/theme/conversions/ignore_glob"
 
 module Theme
   class Command
@@ -12,6 +16,9 @@ module Theme
       DEFAULT_HTTP_HOST = "127.0.0.1"
 
       options do |parser, flags|
+        Conversions::IncludeGlob.register(parser)
+        Conversions::IgnoreGlob.register(parser)
+
         parser.on("--host=HOST") { |host| flags[:host] = host.to_s }
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
@@ -36,10 +43,6 @@ module Theme
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
 
-        include_filter = ShopifyCLI::Theme::IncludeFilter.new(root, options.flags[:includes])
-        ignore_filter = ShopifyCLI::Theme::IgnoreFilter.from_path(root)
-        ignore_filter.add_patterns(options.flags[:ignores]) if options.flags[:ignores]
-        
         ShopifyCLI::Theme::DevServer.start(@ctx, root, host: host, **flags) do |syncer|
           UI::SyncProgressBar.new(syncer).progress(:upload_theme!, delay_low_priority_files: true)
         end
