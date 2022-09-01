@@ -47,17 +47,17 @@ module ShopifyCLI
           &block
         )
           instance.setup(
-            ctx, 
-            root, 
-            host, 
-            theme, 
-            port, 
-            poll, 
-            editor_sync, 
-            stable, 
-            mode, 
-            includes, 
-            ignores, 
+            ctx,
+            root,
+            host,
+            theme,
+            port,
+            poll,
+            editor_sync,
+            stable,
+            mode,
+            includes,
+            ignores,
             &block
           )
           instance.start
@@ -70,17 +70,17 @@ module ShopifyCLI
 
       # rubocop:disable Metrics/ParameterLists
       def setup(
-        ctx, 
-        root, 
-        host, 
-        theme_identifier, 
-        port, 
-        poll, 
-        ditor_sync, 
-        stable, 
-        mode, 
-        includes, 
-        ignores, 
+        ctx,
+        root,
+        host,
+        theme_identifier,
+        port,
+        poll,
+        editor_sync,
+        stable,
+        mode,
+        includes,
+        ignores,
         &block
       )
         @ctx = ctx
@@ -238,7 +238,8 @@ module ShopifyCLI
       # Hooks
 
       def broadcast_hooks
-        file_handler = Hooks::FileChangeHook.new(ctx, theme: theme, include_filter: include_filter, ignore_filter: ignore_filter)
+        file_handler = Hooks::FileChangeHook.new(ctx, theme: theme, include_filter: include_filter,
+          ignore_filter: ignore_filter)
         [file_handler]
       end
 

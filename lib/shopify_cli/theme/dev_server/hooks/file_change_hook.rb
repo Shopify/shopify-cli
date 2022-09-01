@@ -9,7 +9,7 @@ module ShopifyCLI
       module Hooks
         class FileChangeHook
           include ShopifyCLI::Theme::IgnoreHelper
-          
+
           attr_accessor :include_filter, :ignore_filter
 
           def initialize(ctx, theme:, include_filter: nil, ignore_filter: nil)
