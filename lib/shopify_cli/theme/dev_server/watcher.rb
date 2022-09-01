@@ -21,7 +21,7 @@ module ShopifyCLI
           @ignore_filter = ignore_filter
           @include_filter = include_filter
           @listener = FileSystemListener.new(root: @theme.root, force_poll: poll,
-            ignore_regex: ignore_regexes) # TODO include regexes along with this? put it in the ignore helper -- ignore_regexes
+            @ignore_filter&.regexes, @include_filter&.regexes)
 
           add_observer(self, :upload_files_when_changed)
         end
