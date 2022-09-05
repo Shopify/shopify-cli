@@ -1,11 +1,12 @@
 # frozen_string_literal: true
+
 require "test_helper"
 require "shopify_cli/theme/dev_server"
 require "rack/mock"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class LocalAssetsTest < Minitest::Test
         def test_replace_local_assets_in_reponse_body
           original_html = <<~HTML
@@ -99,7 +100,7 @@ module ShopifyCLI
           root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           ctx = TestHelpers::FakeContext.new(root: root)
           theme = Theme.new(ctx, root: root)
-          stack = LocalAssets.new(ctx, app, theme: theme)
+          stack = LocalAssets.new(ctx, app, theme)
           request = Rack::MockRequest.new(stack)
           request.get(path)
         end

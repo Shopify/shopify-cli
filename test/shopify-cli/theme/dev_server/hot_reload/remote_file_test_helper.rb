@@ -5,7 +5,7 @@ require "shopify_cli/theme/theme"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class RemoteFileTestHelper < Minitest::Test
         private
 

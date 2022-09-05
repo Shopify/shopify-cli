@@ -1,25 +1,18 @@
 # frozen_string_literal: true
 
-require_relative "hot_reload/remote_file_reloader"
-require_relative "hot_reload/remote_file_deleter"
-require_relative "hot_reload/sections_index"
-
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class HotReload
-        def initialize(ctx, app, theme:, watcher:, mode:, ignore_filter: nil)
+        def initialize(ctx, app, broadcast_hooks: [], script_injector: nil, watcher:, mode:)
           @ctx = ctx
           @app = app
-          @theme = theme
           @mode = mode
+          @broadcast_hooks = broadcast_hooks
+          @script_injector = script_injector
           @streams = SSE::Streams.new
-          @remote_file_reloader = RemoteFileReloader.new(ctx, theme: @theme, streams: @streams)
-          @remote_file_deleter = RemoteFileDeleter.new(ctx, theme: @theme, streams: @streams)
-          @sections_index = SectionsIndex.new(@theme)
           @watcher = watcher
           @watcher.add_observer(self, :notify_streams_of_file_change)
-          @ignore_filter = ignore_filter
         end
 
         def call(env)
@@ -39,80 +32,19 @@ module ShopifyCLI
         end
 
         def notify_streams_of_file_change(modified, added, removed)
-          files = (modified + added)
-            .map { |file| @theme[file] }
-            .reject { |file| @ignore_filter&.ignore?(file.relative_path) }
-
-          files -= liquid_css_files = files.select(&:liquid_css?)
-
-          deleted_files = removed
-            .map { |file| @theme[file] }
-            .reject { |file| @ignore_filter&.ignore?(file.relative_path) }
-
-          remote_delete(deleted_files) unless deleted_files.empty?
-          reload_page(removed) unless deleted_files.empty?
-
-          hot_reload(files) unless files.empty?
-          remote_reload(liquid_css_files)
+          @broadcast_hooks.each do |hook|
+            hook.call(modified, added, removed, streams: @streams)
+          end
         end
 
         private
-
-        def hot_reload(files)
-          paths = files.map(&:relative_path)
-          @streams.broadcast(JSON.generate(modified: paths))
-          @ctx.debug("[HotReload] Modified #{paths.join(", ")}")
-        end
-
-        def reload_page(removed)
-          @streams.broadcast(JSON.generate(reload_page: true))
-          @ctx.debug("[ReloadPage] Deleted #{removed.join(", ")}")
-        end
-
-        def remote_delete(files)
-          files.each do |file|
-            @ctx.debug("delete file each -> file.relative_path #{file.relative_path}")
-            @remote_file_deleter.delete(file)
-          end
-        end
-
-        def remote_reload(files)
-          files.each do |file|
-            @ctx.debug("reload file each -> file.relative_path #{file.relative_path}")
-            @remote_file_reloader.reload(file)
-          end
-        end
 
         def request_is_html?(headers)
           headers["content-type"]&.start_with?("text/html")
         end
 
         def inject_hot_reload_javascript(body)
-          hot_reload_js = ::File.read("#{__dir__}/hot-reload.js")
-          hot_reload_no_script = ::File.read("#{__dir__}/hot-reload-no-script.html")
-          hot_reload_script = [
-            hot_reload_no_script,
-            "<script>",
-            params_js,
-            hot_reload_js,
-            "</script>",
-          ].join("\n")
-
-          body = body.join.gsub("</body>", "#{hot_reload_script}\n</body>")
-
-          [body]
-        end
-
-        def params_js
-          env = {
-            mode: @mode,
-            section_names_by_type: @sections_index.section_names_by_type,
-          }
-          <<~JS
-            (() => {
-              window.__SHOPIFY_CLI_ENV__ = #{env.to_json};
-            })();
-          JS
+          @script_injector&.inject(body: body, dir: __dir__, mode: @mode)
         end
 
         def create_stream

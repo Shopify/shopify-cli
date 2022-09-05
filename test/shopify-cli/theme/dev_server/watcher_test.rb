@@ -1,11 +1,10 @@
 # frozen_string_literal: true
 require "test_helper"
 require "shopify_cli/theme/dev_server"
-require "shopify_cli/theme/dev_server/watcher"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class WatcherTest < Minitest::Test
         def setup
           super

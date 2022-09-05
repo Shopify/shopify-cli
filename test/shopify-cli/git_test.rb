@@ -160,6 +160,20 @@ module ShopifyCLI
       end
     end
 
+    def test_raw_clone_clones_git_repo
+      Open3.expects(:popen3).with(
+        "git",
+        "clone",
+        "--single-branch",
+        "git@github.com:shopify/test.git",
+        "test-app",
+        "--progress"
+      ).returns(mock(success?: true))
+      capture_io do
+        ShopifyCLI::Git.raw_clone("git@github.com:shopify/test.git", "test-app", ctx: @context)
+      end
+    end
+
     def test_clones_git_repo_with_branch
       Open3.expects(:popen3).with(
         "git",
@@ -173,6 +187,118 @@ module ShopifyCLI
       ).returns(mock(success?: true))
       capture_io do
         ShopifyCLI::Git.clone("git@github.com:shopify/test.git#cli_test_branch", "test-app", ctx: @context)
+      end
+    end
+
+    def test_raw_clone_clones_git_repo_with_branch
+      Open3.expects(:popen3).with(
+        "git",
+        "clone",
+        "--single-branch",
+        "--branch",
+        "cli_test_branch",
+        "git@github.com:shopify/test.git",
+        "test-app",
+        "--progress"
+      ).returns(mock(success?: true))
+      capture_io do
+        ShopifyCLI::Git.raw_clone("git@github.com:shopify/test.git#cli_test_branch", "test-app", ctx: @context)
+      end
+    end
+
+    def test_clones_git_repo_when_directory_exists_but_it_is_empty
+      destination = "test-app"
+
+      Dir.stubs(:exist?).with(destination).returns(true)
+      Dir.stubs(:empty?).with(destination).returns(true)
+
+      Open3.expects(:popen3).with(
+        "git",
+        "clone",
+        "--single-branch",
+        "git@github.com:shopify/test.git",
+        "test-app",
+        "--progress"
+      ).returns(mock(success?: true))
+      capture_io do
+        ShopifyCLI::Git.clone("git@github.com:shopify/test.git", destination, ctx: @context)
+      end
+    end
+
+    def test_raw_clone_clones_git_repo_when_directory_exists_but_it_is_empty
+      destination = "test-app"
+
+      Dir.stubs(:exist?).with(destination).returns(true)
+      Dir.stubs(:empty?).with(destination).returns(true)
+
+      Open3.expects(:popen3).with(
+        "git",
+        "clone",
+        "--single-branch",
+        "git@github.com:shopify/test.git",
+        "test-app",
+        "--progress"
+      ).returns(mock(success?: true))
+      capture_io do
+        ShopifyCLI::Git.raw_clone("git@github.com:shopify/test.git", destination, ctx: @context) do |percent|
+          puts(percent)
+        end
+      end
+    end
+
+    def test_clone_progress_parses_percentage_and_yield_to_block
+      msg = nil
+
+      clone_msg_stream = [
+        "Receiving objects: 7% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+        "Receiving objects: 91% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+        "Receiving objects: 100% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+      ]
+      ShopifyCLI::Git.clone_progress(stderr(clone_msg_stream), bar: nil) do |percent|
+        msg, _err = capture_io do
+          puts(percent)
+        end
+      end
+
+      assert_equal("1.0\n", msg)
+    end
+
+    def test_clone_progress_parses_percentage_and_set_percent_bar
+      bar = Bar.new
+
+      clone_msg_stream = [
+        "Receiving objects: 7% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+        "Receiving objects: 91% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+        "Receiving objects: 100% (5824/5824), 8.78 MiB | 19.86 MiB/s, done.",
+      ]
+      ShopifyCLI::Git.clone_progress(stderr(clone_msg_stream), bar: bar)
+
+      assert_equal(1.0, bar.percent) # rubocop:disable Minitest/AssertInDelta
+    end
+
+    def test_clone_progress_does_not_call_yield_without_percentage
+      msg = nil
+
+      clone_msg_stream = ["Unknown message"]
+      ShopifyCLI::Git.clone_progress(stderr(clone_msg_stream), bar: nil) do |percent|
+        msg, _err = capture_io do
+          puts(percent)
+        end
+      end
+
+      assert_nil msg
+    end
+
+    def test_it_does_not_clone_git_repo_when_directory_is_not_empty
+      destination = "test-app"
+
+      Dir.stubs(:exist?).with(destination).returns(true)
+      Dir.stubs(:empty?).with(destination).returns(false)
+
+      assert_raises(ShopifyCLI::Abort) do
+        capture_io do
+          ShopifyCLI::Git.clone("git@github.com:shopify/test.git", destination, ctx: @context)
+        end
       end
     end
 
@@ -225,6 +351,10 @@ module ShopifyCLI
 
     private
 
+    def stderr(msg)
+      StdErr.new(msg)
+    end
+
     def in_repo
       Dir.mktmpdir do |dir|
         system("git init --initial-branch=main #{Shellwords.escape(dir)}> /dev/null")
@@ -263,6 +393,28 @@ module ShopifyCLI
       @context.stubs(:capture2e)
         .with("git", "status")
         .returns([output, @status_mock[:"#{status}"]])
+    end
+
+    class StdErr
+      def initialize(msg)
+        @msg = msg
+      end
+
+      def gets
+        @msg.shift
+      end
+    end
+
+    class Bar
+      attr_reader :percent
+
+      def initialize
+        @percent = 0
+      end
+
+      def tick(set_percent:)
+        @percent = set_percent
+      end
     end
   end
 end

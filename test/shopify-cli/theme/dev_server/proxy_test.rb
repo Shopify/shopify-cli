@@ -1,22 +1,18 @@
 # frozen_string_literal: true
 require "test_helper"
-require "shopify_cli/theme/dev_server"
+require "shopify_cli/theme/dev_server/proxy"
+require "shopify_cli/theme/development_theme"
 require "rack/mock"
 require "timecop"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class ProxyTest < Minitest::Test
         SECURE_SESSION_ID = "deadbeef"
 
         def setup
           super
-          root = ShopifyCLI::ROOT + "/test/fixtures/theme"
-          @ctx = TestHelpers::FakeContext.new(root: root)
-          @theme = DevelopmentTheme.new(@ctx, root: root)
-          @syncer = stub(pending_updates: [])
-          @proxy = Proxy.new(@ctx, theme: @theme, syncer: @syncer)
 
           ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
           ShopifyCLI::DB
@@ -27,6 +23,19 @@ module ShopifyCLI
             .stubs(:get)
             .with(:development_theme_id)
             .returns("123456789")
+
+          root = ShopifyCLI::ROOT + "/test/fixtures/theme"
+
+          @theme = DevelopmentTheme.new(@ctx, root: root)
+          @syncer = stub(pending_updates: [])
+          @ctx = TestHelpers::FakeContext.new(root: root)
+
+          param_builder = ProxyParamBuilder
+            .new
+            .with_theme(@theme)
+            .with_syncer(@syncer)
+
+          @proxy = Proxy.new(@ctx, @theme, param_builder)
         end
 
         def test_get_is_proxied_to_online_store
@@ -206,6 +215,32 @@ module ShopifyCLI
           end
         end
 
+        def test_replaces_secure_session_id_cookie
+          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+            .with(
+              headers: {
+                "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
+              }
+            )
+
+          stub_session_id_request
+          request.get("/",
+            "HTTP_COOKIE" => "_secure_session_id=a12cef")
+        end
+
+        def test_appends_secure_session_id_cookie
+          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
+            .with(
+              headers: {
+                "Cookie" => "cart_currency=CAD; secure_customer_sig=; _secure_session_id=#{SECURE_SESSION_ID}",
+              }
+            )
+
+          stub_session_id_request
+          request.get("/",
+            "HTTP_COOKIE" => "cart_currency=CAD; secure_customer_sig=")
+        end
+
         def test_pass_pending_templates_to_storefront
           ShopifyCLI::DB
             .stubs(:get)
@@ -330,32 +365,6 @@ module ShopifyCLI
             @theme["layout/theme.liquid"],
           ])
           request.get("/on-core")
-        end
-
-        def test_replaces_secure_session_id_cookie
-          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
-            .with(
-              headers: {
-                "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
-              }
-            )
-
-          stub_session_id_request
-          request.get("/",
-            "HTTP_COOKIE" => "_secure_session_id=a12cef")
-        end
-
-        def test_appends_secure_session_id_cookie
-          stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
-            .with(
-              headers: {
-                "Cookie" => "cart_currency=CAD; secure_customer_sig=; _secure_session_id=#{SECURE_SESSION_ID}",
-              }
-            )
-
-          stub_session_id_request
-          request.get("/",
-            "HTTP_COOKIE" => "cart_currency=CAD; secure_customer_sig=")
         end
 
         def test_requires_exchange_token

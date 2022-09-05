@@ -1,24 +1,23 @@
 # frozen_string_literal: true
-require "listen"
-require "observer"
+require "shopify_cli/file_system_listener"
+require "forwardable"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       # Watches for file changes and publish events to the theme
       class Watcher
-        include Observable
+        extend Forwardable
+
+        def_delegators :@listener, :add_observer, :changed, :notify_observers
 
         def initialize(ctx, theme:, syncer:, ignore_filter: nil, poll: false)
           @ctx = ctx
           @theme = theme
           @syncer = syncer
           @ignore_filter = ignore_filter
-          @listener = Listen.to(@theme.root, force_polling: poll,
-            ignore: @ignore_filter&.regexes) do |modified, added, removed|
-            changed
-            notify_observers(modified, added, removed)
-          end
+          @listener = FileSystemListener.new(root: @theme.root, force_poll: poll,
+            ignore_regex: @ignore_filter&.regexes)
 
           add_observer(self, :upload_files_when_changed)
         end

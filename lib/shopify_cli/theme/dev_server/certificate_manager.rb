@@ -4,7 +4,7 @@ require "openssl"
 
 module ShopifyCLI
   module Theme
-    module DevServer
+    class DevServer
       class CertificateManager
         attr_reader :ctx, :domain_name, :certificate, :private_key
 

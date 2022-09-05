@@ -17,6 +17,18 @@ module Extension
         parser.on("-p", "--port=PORT", "Specify the port to use") do |port|
           flags[:port] = port.to_i
         end
+        parser.on("-T", "--theme=NAME_OR_ID", "Theme ID or name of the theme app extension host theme.") do |theme|
+          flags[:theme] = theme
+        end
+        parser.on("--api-key=API_KEY", "Connect your extension and app by inserting your app's API key") do |api_key|
+          flags[:api_key] = api_key.gsub('"', "")
+        end
+        parser.on("--api-secret=API_SECRET", "The API secret of the app the script is registered with.") do |api_secret|
+          flags[:api_secret] = api_secret.gsub('"', "")
+        end
+        parser.on("--extension-id=EXTENSION_ID", "The id of the extension's registration.") do |registration_id|
+          flags[:registration_id] = registration_id.gsub('"', "")
+        end
       end
 
       class RuntimeConfiguration
@@ -26,13 +38,21 @@ module Extension
         property :resource_url, accepts: String, default: nil
         property! :tunnel_requested, accepts: [true, false], reader: :tunnel_requested?, default: true
         property :port, accepts: (1...(2**16))
+        property :theme, accepts: String, default: nil
+        property :api_key, accepts: String, default: nil
+        property :api_secret, accepts: String, default: nil
+        property :registration_id, accepts: String, default: nil
       end
 
       def call(_args, _command_name)
         config = RuntimeConfiguration.new(
           tunnel_requested: tunnel_requested?,
           resource_url: options.flags[:resource_url],
-          port: options.flags[:port]
+          port: options.flags[:port],
+          theme: options.flags[:theme],
+          api_key: options.flags[:api_key],
+          api_secret: options.flags[:api_secret],
+          registration_id: options.flags[:registration_id]
         )
 
         ShopifyCLI::Result
@@ -87,6 +107,10 @@ module Extension
           context: @ctx,
           tunnel_url: runtime_configuration.tunnel_url,
           port: runtime_configuration.port,
+          theme: runtime_configuration.theme,
+          api_key: runtime_configuration.api_key,
+          api_secret: runtime_configuration.api_secret,
+          registration_id: runtime_configuration.registration_id,
           resource_url: runtime_configuration.resource_url
         )
         runtime_configuration
