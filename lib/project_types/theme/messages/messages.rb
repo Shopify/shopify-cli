@@ -138,6 +138,7 @@ module Theme
           viewing_theme: "Viewing theme…",
           syncing_theme: "Syncing theme #%s on %s",
           open_fail: "Couldn't open the theme",
+          stop_signal: "Stop signal: \"%s\"",
           stopping: "Stopping…",
           auth: {
             error_message: <<~ERROR_MESSAGE,
