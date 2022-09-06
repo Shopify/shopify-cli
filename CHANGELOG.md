@@ -2,13 +2,13 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2600](https://github.com/Shopify/shopify-cli/pull/2600): Add support to the `SIGTERM` signal
+
 ## Version 2.24.0 - 2022-08-29
 
 ### Fixed
 * [#2572](https://github.com/Shopify/shopify-cli/pull/2572): **Breaking** Update theme-check to 1.11.0 (dropped support for ruby 2.6)
-
-### Added
-* [#2600](https://github.com/Shopify/shopify-cli/pull/2600): Add support to the `SIGTERM` signal
 
 ## Version 2.23.0 - 2022-08-22
 
