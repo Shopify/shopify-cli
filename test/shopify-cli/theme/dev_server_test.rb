@@ -5,6 +5,36 @@ require "shopify_cli/theme/dev_server"
 module ShopifyCLI
   module Theme
     class DevServerTest < Minitest::Test
+      def test_stopped_without_any_signal
+        mocked_server.start
+
+        refute(mocked_server.stopped)
+      end
+
+      def test_stopped_with_sigterm
+        pid = fork do
+          mocked_server.start
+
+          Process.kill("TERM", Process.pid)
+
+          assert(mocked_server.stopped)
+        end
+
+        Process.wait(pid)
+      end
+
+      def test_stop_with_sigint
+        pid = fork do
+          mocked_server.start
+
+          Process.kill("INT", Process.pid)
+
+          assert(mocked_server.stopped)
+        end
+
+        Process.wait(pid)
+      end
+
       def test_middleware_stack
         server = dev_server
         server.stubs(:theme).returns(stub)
@@ -74,9 +104,24 @@ module ShopifyCLI
         server
       end
 
+      def mocked_server
+        return @mocked_server if @mocked_server
+
+        @mocked_server = dev_server
+        @mocked_server.stubs(:theme).returns(stub)
+        @mocked_server.stubs(:app).returns(stub(close: nil))
+        @mocked_server.stubs(:sync_theme)
+        @mocked_server.stubs(:middleware_stack)
+        @mocked_server.stubs(:setup_server)
+        @mocked_server.stubs(:start_server)
+        @mocked_server.stubs(:teardown_server)
+        @mocked_server
+      end
+
       def ctx
         @ctx ||= ShopifyCLI::Context.new.tap do |context|
           context.stubs(:message).returns("default mock")
+          context.stubs(:puts)
           context.stubs(:message)
             .with("theme.serve.theme_not_found", 1234)
             .returns("Theme \"1234\" doesn't exist")

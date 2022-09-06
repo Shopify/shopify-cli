@@ -71,7 +71,8 @@ module ShopifyCLI
         sync_theme
 
         # Handle process stop
-        trap("INT") { stop }
+        trap("INT") { stop("SIGINT") }
+        trap("TERM") { stop("SIGTERM") }
 
         # Setup the middleware stack. Mimics Rack::Builder / config.ru, but in reverse order
         @app = middleware_stack
@@ -90,7 +91,9 @@ module ShopifyCLI
         ctx.abort(binding_error_message)
       end
 
-      def stop
+      def stop(signal = nil)
+        ctx.debug(stop_signal(signal)) unless signal.nil?
+
         @stopped = true
 
         ctx.puts(stopping_message)
@@ -254,6 +257,10 @@ module ShopifyCLI
 
       def stopping_message
         ctx.message("theme.serve.stopping")
+      end
+
+      def stop_signal(signal)
+        ctx.message("theme.serve.stop_signal", signal)
       end
 
       def not_found_error_message
