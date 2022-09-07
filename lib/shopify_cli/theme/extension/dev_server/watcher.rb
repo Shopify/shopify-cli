@@ -1,5 +1,7 @@
 # frozen_string_literal: true
+
 require "shopify_cli/file_system_listener"
+require "shopify_cli/theme/dev_server"
 require "forwardable"
 
 module ShopifyCLI
@@ -29,16 +31,14 @@ module ShopifyCLI
             @listener.stop
           end
 
-          def notify_updates(modified, added, _removed)
-            @syncer.enqueue_files(filter_extension_files(modified + added))
+          def notify_updates(modified, added, removed)
+            @syncer.enqueue_updates(files(modified).select { |file| @extension.extension_file?(file) })
+            @syncer.enqueue_creates(files(added).select { |file| @extension.extension_file?(file) })
+            @syncer.enqueue_deletes(files(removed))
           end
 
-          private
-
-          def filter_extension_files(files)
-            files
-              .select { |f| @extension.extension_file?(f) }
-              .map { |f| @extension[f] }
+          def files(paths)
+            paths.map { |file| @extension[file] }
           end
         end
       end

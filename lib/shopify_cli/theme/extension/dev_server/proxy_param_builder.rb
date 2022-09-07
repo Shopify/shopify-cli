@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "cgi"
+require "shopify_cli/theme/dev_server"
 
 module ShopifyCLI
   module Theme
@@ -55,7 +56,7 @@ module ShopifyCLI
           end
 
           def syncer_templates
-            @syncer&.pending_updates || []
+            @syncer&.pending_files || []
           end
 
           def cookie_files

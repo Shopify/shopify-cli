@@ -11,7 +11,7 @@ module ShopifyCLI
           def setup
             super
             @param_builder = ProxyParamBuilder.new
-            @syncer = stub(pending_updates: [])
+            @syncer = stub(pending_files: [])
           end
 
           def test_empty_build
@@ -22,7 +22,7 @@ module ShopifyCLI
             @param_builder
               .with_syncer(@syncer)
 
-            @syncer.expects(:pending_updates).returns([
+            @syncer.expects(:pending_files).returns([
               extension["blocks/block.liquid"],
               extension["snippets/snippet.liquid"],
             ])
