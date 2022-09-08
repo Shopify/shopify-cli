@@ -65,7 +65,7 @@ module ShopifyCLI
             )
           end
 
-          headers = get_response_headers(response)
+          headers = get_response_headers(response, env)
 
           unless headers["x-storefront-renderer-rendered"]
             @core_endpoints << env["PATH_INFO"]
@@ -170,7 +170,7 @@ module ShopifyCLI
           @secure_session_id
         end
 
-        def get_response_headers(response)
+        def get_response_headers(response, env)
           response_headers = normalize_headers(
             response.respond_to?(:headers) ? response.headers : response.to_hash
           )
@@ -180,7 +180,7 @@ module ShopifyCLI
           response_headers.reject! { |k| HOP_BY_HOP_HEADERS.include?(k.downcase) }
 
           if response_headers["location"]&.include?("myshopify.com")
-            response_headers["location"].gsub!(%r{(https://#{shop})}, "http://127.0.0.1:9292")
+            response_headers["location"].gsub!(%r{(https://#{shop})}, "http://#{host(env)}")
           end
 
           new_session_id = extract_secure_session_id_from_response_headers(response_headers)
