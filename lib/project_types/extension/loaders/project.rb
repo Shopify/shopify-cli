@@ -3,12 +3,13 @@
 module Extension
   module Loaders
     module Project
-      def self.load(context:, directory:, api_key:, registration_id:, api_secret:)
+      def self.load(context:, directory:, api_key:, registration_id:, api_secret:, env: {})
         env_overrides = {
           "SHOPIFY_API_KEY" => api_key,
           "SHOPIFY_API_SECRET" => api_secret,
           "EXTENSION_ID" => registration_id,
-        }.compact
+        }.compact.merge(env)
+
         env_file_present = env_file_exists?(directory)
         env = if env_file_present
           ShopifyCLI::Resources::EnvFile.read(directory, overrides: env_overrides)

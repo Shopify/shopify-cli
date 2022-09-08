@@ -102,7 +102,7 @@ module Extension
       serve: {
         help: <<~HELP,
           Serve your extension in a local simulator for development.
-            Usage: {{command:%s extension serve}}
+            Usage: {{command:%s extension serve [ ROOT ]}}
             Options:
               {{command:-p, --port=PORT}}             Local port of the development serve.
               {{command:-T, --theme=NAME_OR_ID}}      Theme ID or name of the host theme.

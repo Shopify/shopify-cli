@@ -384,6 +384,29 @@ module ShopifyCLI
           end
         end
 
+        def test_bearer_token_from_environment
+          Environment.stubs(:storefront_renderer_auth_token).returns("TOKEN_A")
+          ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns("TOKEN_B")
+
+          assert_equal("TOKEN_A", @proxy.send(:bearer_token))
+        end
+
+        def test_bearer_token_from_db
+          Environment.stubs(:storefront_renderer_auth_token).returns(nil)
+          ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns("TOKEN_B")
+
+          assert_equal("TOKEN_B", @proxy.send(:bearer_token))
+        end
+
+        def test_bearer_token_error
+          Environment.stubs(:storefront_renderer_auth_token).returns(nil)
+          ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns(nil)
+
+          error = assert_raises(KeyError) { @proxy.send(:bearer_token) }
+
+          assert_equal("storefront_renderer_production_exchange_token missing", error.message)
+        end
+
         private
 
         def request

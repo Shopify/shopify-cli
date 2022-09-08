@@ -193,6 +193,18 @@ module ShopifyCLI
       assert_equal exchanged_token, got
     end
 
+    def test_fetch_or_auth_partners_token_when_cli_is_running_as_a_subprocess
+      expected_token = "token"
+
+      IdentityAuth::EnvAuthToken.stubs(:partners_token_present?).returns(true)
+      Environment.stubs(:run_as_subprocess?).returns(true)
+      Environment.stubs(:auth_token).returns(expected_token)
+
+      actual_token = identity_auth_client.fetch_or_auth_partners_token
+
+      assert_equal(expected_token, actual_token)
+    end
+
     private
 
     def assert_expected_exchange_tokens(token_suffix:, client:)

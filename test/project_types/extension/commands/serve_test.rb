@@ -99,6 +99,8 @@ module Extension
 
       def test_resource_url_is_forwarded_to_specification_handler_if_one_is_provided
         serve = ::Extension::Command::Serve.new(@context)
+        serve.stubs(:project).returns(project)
+
         expected_resource_url = "foo/bar"
         stub_specification_handler_options(serve, choose_port: true)
 
@@ -111,6 +113,7 @@ module Extension
           api_secret: nil,
           registration_id: nil,
           resource_url: expected_resource_url,
+          project: project,
         )
 
         serve.options.flags[:resource_url] = expected_resource_url
@@ -119,6 +122,7 @@ module Extension
 
       def test_theme_is_forwarded_to_specification_handler_if_one_is_provided
         serve = ::Extension::Command::Serve.new(@context)
+        serve.stubs(:project).returns(project)
         theme = "dev theme"
         stub_specification_handler_options(serve, choose_port: true)
 
@@ -131,6 +135,7 @@ module Extension
           api_secret: nil,
           registration_id: nil,
           resource_url: nil,
+          project: project,
         )
 
         serve.options.flags[:theme] = theme
@@ -139,6 +144,7 @@ module Extension
 
       def test_auth_keys_are_forwarded_to_specification_handler_when_provided
         serve = ::Extension::Command::Serve.new(@context)
+        serve.stubs(:project).returns(project)
         api_key = "api_key_1234"
         api_secret = "api_secret_5678"
         registration_id = "registration_id_9ABC"
@@ -154,6 +160,7 @@ module Extension
           api_secret: api_secret,
           registration_id: registration_id,
           resource_url: nil,
+          project: project,
         )
 
         serve.options.flags[:api_key] = api_key
@@ -162,7 +169,50 @@ module Extension
         serve.call([], "serve")
       end
 
+      def test_projects
+        api_key = "api_key_1234"
+        api_secret = "api_secret_5678"
+        registration_id = "registration_id_9ABC"
+        extension_title = "extension title"
+        extension_type = "TEST_EXTENSION"
+        options = stub(flags: {
+          context: @context,
+          api_key: api_key,
+          api_secret: api_secret,
+          registration_id: registration_id,
+          extension_title: extension_title,
+          extension_type: extension_type,
+        })
+
+        serve = ::Extension::Command::Serve.new(@context)
+        serve.stubs(:options).returns(options)
+
+        Extension::Loaders::Project
+          .expects(:load)
+          .with(
+            context: @context,
+            directory: Dir.pwd,
+            api_key: api_key,
+            api_secret: api_secret,
+            registration_id: registration_id,
+            env: {
+              ExtensionProjectKeys::TITLE_KEY => extension_title,
+              ExtensionProjectKeys::REGISTRATION_ID_KEY => registration_id,
+              ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY => extension_type,
+            }
+          )
+
+        serve.send(:project)
+      end
+
       private
+
+      def project
+        @project ||= stub(
+          specification_identifier: "TEST_EXTENSION",
+          app: stub(api_key: nil)
+        )
+      end
 
       def stub_specification_handler_options(serve, choose_port: false, establish_tunnel: false)
         serve.specification_handler.expects(:choose_port?).returns(choose_port).once

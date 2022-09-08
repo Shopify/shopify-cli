@@ -76,11 +76,12 @@ module Extension
         def serve(**options)
           @ctx = options[:context]
           root = options[:context]&.root
+          project = options[:project]
           properties = options
             .slice(:port, :theme)
             .compact
             .merge({
-              project: load_project(options),
+              project: project,
               specification_handler: self,
             })
 
@@ -88,16 +89,6 @@ module Extension
         end
 
         private
-
-        def load_project(options)
-          Extension::Loaders::Project.load(
-            context: options[:context],
-            directory: Dir.pwd,
-            api_key: options[:api_key],
-            api_secret: options[:api_secret],
-            registration_id: options[:registration_id]
-          )
-        end
 
         def validate(filename)
           dirname = File.dirname(filename)

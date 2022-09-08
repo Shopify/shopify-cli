@@ -29,7 +29,7 @@ module ShopifyCLI
         attr_accessor :project, :specification_handler
 
         class << self
-          def start(ctx, root, port: 8282, theme: nil, project:, specification_handler:)
+          def start(ctx, root, port: 9292, theme: nil, project:, specification_handler:)
             instance.project = project
             instance.specification_handler = specification_handler
 
