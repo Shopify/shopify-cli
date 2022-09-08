@@ -171,11 +171,12 @@ module ShopifyCLI
             .to_return(status: 302, headers: {
               "Location" => "https://dev-theme-server-store.myshopify.com/password",
             })
+          @proxy.stubs(:host).returns("127.0.0.1:8282")
 
           stub_session_id_request
           response = request.get("/")
 
-          assert_equal("http://127.0.0.1:9292/password", response.headers["Location"])
+          assert_equal("http://127.0.0.1:8282/password", response.headers["Location"])
         end
 
         def test_non_storefront_redirect_headers_are_not_rewritten
