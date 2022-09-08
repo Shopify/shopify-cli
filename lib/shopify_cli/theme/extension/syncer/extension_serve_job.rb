@@ -24,14 +24,20 @@ module ShopifyCLI
             @extension = extension
             @project = project
             @specification_handler = specification_handler
-            @syncer = syncer
 
-            @mut = Mutex.new
+            @syncer = syncer
+            @syncer_mutex = Mutex.new
+
+            @job_in_progress = false
+            @job_in_progress_mutex = Mutex.new
           end
 
           def perform!
-            return if @syncer.pending_updates.empty? # if no updates
-            return if Time.now - @syncer.latest_sync < PUSH_INTERVAL
+            return unless @syncer.any_operation?
+            return if job_in_progress?
+            return if recently_synced? && !@syncer.any_blocking_operation?
+
+            job_in_progress!
 
             input = {
               api_key: @project.app.api_key,
@@ -52,13 +58,28 @@ module ShopifyCLI
               ::Extension::Tasks::Converters::VersionConverter.from_hash(@ctx, response.dig(VERSION_FIELD))
             end
 
-            @mut.synchronize do
-              @syncer.pending_updates.clear
+            @syncer_mutex.synchronize do
+              @syncer.pending_operations.clear
               @syncer.latest_sync = Time.now
             end
+
+          ensure
+            job_in_progress!(false)
           end
 
           private
+
+          def job_in_progress!(in_progress = true)
+            @job_in_progress_mutex.synchronize { @job_in_progress = in_progress }
+          end
+
+          def job_in_progress?
+            @job_in_progress
+          end
+
+          def recently_synced?
+            Time.now - @syncer.latest_sync < PUSH_INTERVAL
+          end
 
           def timestamp
             Time.now.strftime("%T")
@@ -92,7 +113,7 @@ module ShopifyCLI
           end
 
           def print_items(erroneous_files)
-            @syncer.pending_updates.each do |file|
+            @syncer.pending_files.each do |file|
               err = erroneous_files.dig(file)
               if err
                 print_file_error(file, err)

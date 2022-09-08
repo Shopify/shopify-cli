@@ -6,34 +6,59 @@ module ShopifyCLI
       class DevServer
         module Hooks
           class FileChangeHook
-            def initialize(ctx, extension:)
+            attr_reader :ctx, :extension, :syncer, :streams
+
+            def initialize(ctx, extension:, syncer:)
               @ctx = ctx
               @extension = extension
+              @syncer = syncer
             end
 
             def call(modified, added, removed, streams: nil)
               @streams = streams
-              files = (modified + added)
-                .map { |f| @extension[f] }
-                .reject(&:liquid_css?)
-              deleted_files = removed
-                .map { |f| @extension[f] }
 
-              reload_page(removed) unless deleted_files.empty?
-              hot_reload(files) unless files.empty?
+              modified = paths(modified).select { |file| @extension.extension_file?(file) }
+              added = paths(added).select { |file| @extension.extension_file?(file) }
+              removed = paths(removed)
+
+              hot_reload(modified) unless modified.empty?
+              reload_page(added, removed) unless (added + removed).empty?
             end
 
             private
 
-            def hot_reload(files)
-              paths = files.map(&:relative_path)
-              @streams.broadcast(JSON.generate(modified: paths))
-              @ctx.debug("[HotReload] Modified #{paths.join(", ")}")
+            def hot_reload(modified)
+              broadcast(modified: modified)
+
+              ctx.debug("[HotReload] Modified: #{modified.join(", ")}")
             end
 
-            def reload_page(removed)
-              @streams.broadcast(JSON.generate(reload_page: true))
-              @ctx.debug("[ReloadPage] Deleted #{removed.join(", ")}")
+            def reload_page(added, removed)
+              wait_blocking_operations
+
+              broadcast(reload_page: true)
+
+              ctx.debug("[ReloadPage] Added: #{added.join(", ")}")
+              ctx.debug("[ReloadPage] Removed: #{removed.join(", ")}")
+            end
+
+            def wait_blocking_operations
+              retries = 10
+              while syncer.any_blocking_operation? && !retries.zero?
+                sleep(0.5)
+                retries -= 1
+              end
+            end
+
+            def paths(files)
+              files
+                .map { |file| extension[file] }
+                .reject(&:liquid_css?)
+                .map(&:relative_path)
+            end
+
+            def broadcast(message)
+              streams&.broadcast(JSON.generate(message))
             end
           end
         end

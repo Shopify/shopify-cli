@@ -15,55 +15,53 @@ module ShopifyCLI
             SSE = ::ShopifyCLI::Theme::DevServer::SSE
             HotReload = ::ShopifyCLI::Theme::DevServer::HotReload
 
-            def setup
-              super
-              root = ShopifyCLI::ROOT + "/test/fixtures/extension"
-              @ctx = TestHelpers::FakeContext.new(root: root)
-              @extension = AppExtension.new(@ctx, root: root)
-              @syncer = stub("Syncer", enqueue_files: true)
-              @watcher = Watcher.new(@ctx, extension: @extension, syncer: @syncer)
-              @mode = "off"
-            end
-
             def test_streams_on_hot_reload_path
               SSE::Stream.any_instance.expects(:each).yields("")
               serve(path: "/hot-reload")
             end
 
-            def test_broadcasts_watcher_events_when_file_modified
-              modified = ["style.css"]
+            def test_broadcasts_watcher_events_when_extension_file_modified
+              modified = ["assets/block1.css"]
+
               SSE::Streams.any_instance
                 .expects(:broadcast)
                 .with(JSON.generate(modified: modified))
 
-              app = -> { [200, {}, []] }
-              HotReload.new(@ctx, app, broadcast_hooks: broadcast_hooks,
-                watcher: @watcher, mode: @mode)
+              hot_reload!
 
-              @watcher.changed
-              @watcher.notify_observers(modified, [], [])
+              watcher.changed
+              watcher.notify_observers(modified, [], [])
             end
 
-            def test_broadcasts_watcher_events_when_file_deleted
+            def test_broadcasts_watcher_events_when_any_file_deleted
               deleted = ["announcement.liquid"]
-              HotReload::RemoteFileDeleter
-                .stubs(:new)
-                .returns(remote_file_deleter)
 
-              SSE::Streams.any_instance
-                .expects(:broadcast)
-                .with(JSON.generate(reload_page: true))
+              hook_sequence = sequence("wait and broadcast")
+              hook.expects(:wait_blocking_operations).in_sequence(hook_sequence)
+              hook.expects(:broadcast).in_sequence(hook_sequence)
 
-              app = -> { [200, {}, []] }
-              HotReload.new(@ctx, app, broadcast_hooks: broadcast_hooks,
-                watcher: @watcher, mode: @mode)
+              hot_reload!
 
-              @watcher.changed
-              @watcher.notify_observers([], [], deleted)
+              watcher.changed
+              watcher.notify_observers([], [], deleted)
+            end
+
+            def test_broadcasts_watcher_events_when_any_file_added
+              added = ["assets/block1.css"]
+
+              hook_sequence = sequence("wait and broadcast")
+              hook.expects(:wait_blocking_operations).in_sequence(hook_sequence)
+              hook.expects(:broadcast).in_sequence(hook_sequence)
+
+              hot_reload!
+
+              watcher.changed
+              watcher.notify_observers([], added, [])
             end
 
             def test_doesnt_broadcast_watcher_events_when_modified_file_is_a_liquid_css
               modified = ["assets/generated.css.liquid"]
+
               HotReload::RemoteFileReloader
                 .stubs(:new)
                 .returns(remote_file_reloader)
@@ -72,15 +70,57 @@ module ShopifyCLI
                 .with(JSON.generate(modified: modified))
                 .never
 
-              app = -> { [200, {}, []] }
-              HotReload.new(@ctx, app, broadcast_hooks: broadcast_hooks,
-                watcher: @watcher, mode: @mode)
+              hot_reload!
 
-              @watcher.changed
-              @watcher.notify_observers(modified, [], [])
+              watcher.changed
+              watcher.notify_observers(modified, [], [])
             end
 
             private
+
+            def hot_reload!
+              HotReload.new(
+                ctx,
+                app,
+                broadcast_hooks: broadcast_hooks,
+                watcher: watcher,
+                mode: mode,
+              )
+            end
+
+            def app
+              -> { [200, {}, []] }
+            end
+
+            def root
+              @root ||= ShopifyCLI::ROOT + "/test/fixtures/extension"
+            end
+
+            def ctx
+              @ctx ||= TestHelpers::FakeContext.new(root: root)
+            end
+
+            def extension
+              @extension ||= AppExtension.new(ctx, root: root)
+            end
+
+            def syncer
+              @syncer ||= stub(
+                "Syncer",
+                enqueue_creates: nil,
+                enqueue_updates: nil,
+                enqueue_deletes: nil,
+                any_blocking_operation?: false,
+              )
+            end
+
+            def watcher
+              @watcher ||= Watcher.new(ctx, extension: extension, syncer: syncer)
+            end
+
+            def mode
+              "off"
+            end
 
             def remote_file_reloader
               reloader = mock("Reloader")
@@ -98,15 +138,18 @@ module ShopifyCLI
               app = lambda do |_env|
                 [200, headers, [response_body]]
               end
-              stack = HotReload.new(@ctx, app, broadcast_hooks: broadcast_hooks,
-                watcher: @watcher, mode: @mode)
+              stack = HotReload.new(ctx, app, broadcast_hooks: broadcast_hooks,
+                watcher: watcher, mode: mode)
               request = Rack::MockRequest.new(stack)
               request.get(path).body
             end
 
             def broadcast_hooks
-              file_change_hook = FileChangeHook.new(@ctx, extension: @extension)
-              [file_change_hook]
+              @broadcast_hooks ||= [hook]
+            end
+
+            def hook
+              @hook ||= FileChangeHook.new(ctx, extension: extension, syncer: syncer)
             end
           end
         end

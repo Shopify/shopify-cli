@@ -127,7 +127,7 @@ module ShopifyCLI
         # Hooks
 
         def broadcast_hooks
-          file_handler = Hooks::FileChangeHook.new(ctx, extension: extension)
+          file_handler = Hooks::FileChangeHook.new(ctx, extension: extension, syncer: syncer)
           [file_handler]
         end
 

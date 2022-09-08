@@ -49,7 +49,7 @@ module ShopifyCLI
 
           @syncer.start
           time_freeze do
-            @syncer.enqueue_files(files)
+            @syncer.enqueue_updates(files)
             @syncer.shutdown
           end
         end
@@ -79,7 +79,7 @@ module ShopifyCLI
             .with(files[2]).once
           @syncer.start
           time_freeze do
-            @syncer.enqueue_files(files)
+            @syncer.enqueue_updates(files)
             @syncer.shutdown
           end
         end
