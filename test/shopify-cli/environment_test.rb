@@ -306,6 +306,37 @@ module ShopifyCLI
       refute got
     end
 
+    def test_use_monorail_is_true
+      env_variables = {
+        Constants::EnvironmentVariables::MONORAIL_REAL_EVENTS.to_s => "1",
+      }
+
+      got = Environment.send_monorail_events?(env_variables: env_variables)
+
+      assert got
+    end
+
+    def test_using_monorail_is_false
+      env_variables = {
+        Constants::EnvironmentVariables::MONORAIL_REAL_EVENTS.to_s => "0",
+      }
+
+      got = Environment.send_monorail_events?(env_variables: env_variables)
+
+      refute got
+    end
+
+    def test_run_as_subprocess_blocks_monorail
+      env_variables = {
+        Constants::EnvironmentVariables::MONORAIL_REAL_EVENTS.to_s => "1",
+        Constants::EnvironmentVariables::RUN_AS_SUBPROCESS.to_s => "1",
+      }
+
+      got = Environment.send_monorail_events?(env_variables: env_variables)
+
+      refute got
+    end
+
     def test_env_variable_truthy
       Environment::TRUTHY_ENV_VARIABLE_VALUES.each do |value|
         assert Environment.env_variable_truthy?("TEST", env_variables: { "TEST" => value })
