@@ -5,6 +5,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Added
 * [#2600](https://github.com/Shopify/shopify-cli/pull/2600): Add support to the `SIGTERM` signal
 
+### Fixed
+* [#2607](https://github.com/Shopify/shopify-cli/pull/2607): Fix proxy to redirect to host and port set by cli
+
 ## Version 2.24.0 - 2022-08-29
 
 ### Fixed
