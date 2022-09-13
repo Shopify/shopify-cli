@@ -159,7 +159,7 @@ module ShopifyCLI
       env_variable_truthy?(
         Constants::EnvironmentVariables::MONORAIL_REAL_EVENTS,
         env_variables: env_variables
-      )
+      ) && !run_as_subprocess?(env_variables: env_variables)
     end
 
     def self.auth_token(env_variables: ENV)
