@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2600](https://github.com/Shopify/shopify-cli/pull/2600): Add support to the `SIGTERM` signal
+* [#2602](https://github.com/Shopify/shopify-cli/pull/2602): Add `--only/--ignore` support to the `theme serve` command
 
 ### Fixed
 * [#2607](https://github.com/Shopify/shopify-cli/pull/2607): Fix proxy to redirect to host and port set by cli

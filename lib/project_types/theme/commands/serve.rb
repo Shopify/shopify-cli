@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/dev_server"
 require "project_types/theme/commands/common/root_helper"
+require "shopify_cli/theme/ignore_filter"
+require "shopify_cli/theme/include_filter"
+require "project_types/theme/conversions/include_glob"
+require "project_types/theme/conversions/ignore_glob"
 
 module Theme
   class Command
@@ -12,6 +16,9 @@ module Theme
       DEFAULT_HTTP_HOST = "127.0.0.1"
 
       options do |parser, flags|
+        Conversions::IncludeGlob.register(parser)
+        Conversions::IgnoreGlob.register(parser)
+
         parser.on("--host=HOST") { |host| flags[:host] = host.to_s }
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
@@ -19,6 +26,14 @@ module Theme
         parser.on("--theme-editor-sync") { flags[:editor_sync] = true }
         parser.on("--stable") { flags[:stable] = true }
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
+        parser.on("-o", "--only=PATTERN", Conversions::IncludeGlob) do |pattern|
+          flags[:includes] ||= []
+          flags[:includes] |= pattern
+        end
+        parser.on("-x", "--ignore=PATTERN", Conversions::IgnoreGlob) do |pattern|
+          flags[:ignores] ||= []
+          flags[:ignores] |= pattern
+        end
       end
 
       def call(_args, name)

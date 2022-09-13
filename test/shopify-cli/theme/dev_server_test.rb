@@ -51,6 +51,26 @@ module ShopifyCLI
         server.send(:middleware_stack)
       end
 
+      def test_dev_server_ignore_filter_sets_property_when_ignores_set
+        ShopifyCLI::Theme::IgnoreFilter.any_instance
+          .expects(:add_patterns)
+          .with("ignores/**")
+          .once
+
+        server = dev_server(ignores: "ignores/**")
+        server.send(:ignore_filter)
+      end
+
+      def test_dev_server_include_filter_sets_property_when_includes
+        ShopifyCLI::Theme::IncludeFilter
+          .expects(:new)
+          .with(root, "includes/**")
+          .once
+
+        server = dev_server(includes: "includes/**")
+        server.send(:include_filter)
+      end
+
       def test_theme_when_theme_does_not_exist
         Theme
           .expects(:find_by_identifier)
@@ -92,15 +112,15 @@ module ShopifyCLI
       end
 
       def teardown
-        TestHelpers::Singleton.reset_singleton!(dev_server)
+        TestHelpers::Singleton.reset_singleton!(DevServer.instance)
       end
 
       private
 
-      def dev_server(identifier: nil)
+      def dev_server(identifier: nil, ignores: nil, includes: nil)
         host, port, poll, editor_sync, stable, mode = nil
         server = DevServer.instance
-        server.setup(ctx, root, host, identifier, port, poll, editor_sync, stable, mode)
+        server.setup(ctx, root, host, identifier, port, poll, editor_sync, stable, mode, includes, ignores)
         server
       end
 

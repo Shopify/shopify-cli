@@ -2,6 +2,8 @@
 require "test_helper"
 require "rack/mock"
 require "shopify_cli/theme/dev_server"
+require "shopify_cli/theme/include_filter"
+require "shopify_cli/theme/ignore_filter"
 
 module ShopifyCLI
   module Theme
@@ -76,6 +78,49 @@ module ShopifyCLI
             @watcher.notify_observers(modified, [], [])
           end
 
+          def test_doesnt_broadcast_modified_ignored_files_in_included_directory
+            root_path = Pathname.new(__dir__)
+            ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/announcement.liquid"])
+            include_filter = ShopifyCLI::Theme::IncludeFilter.new(root_path, ["ignored/**"])
+            modified = ["ignored/announcement.liquid"]
+            SSE::Streams.any_instance
+              .expects(:broadcast)
+              .with(JSON.generate(modified: modified))
+              .never
+
+            app = -> { [200, {}, []] }
+            HotReload.new(
+              @ctx, app,
+              broadcast_hooks: broadcast_hooks(ignore_filter, include_filter),
+              watcher: @watcher,
+              mode: @mode,
+            )
+
+            @watcher.changed
+            @watcher.notify_observers(modified, [], [])
+          end
+
+          def test_broadcast_modified_included_files_in_same_directory_as_ignored_files
+            root_path = Pathname.new(__dir__)
+            ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/announcement.liquid"])
+            include_filter = ShopifyCLI::Theme::IncludeFilter.new(root_path, ["ignored/**"])
+            modified = ["ignored/header.liquid"]
+            SSE::Streams.any_instance
+              .expects(:broadcast)
+              .with(JSON.generate(modified: modified))
+
+            app = -> { [200, {}, []] }
+            HotReload.new(
+              @ctx, app,
+              broadcast_hooks: broadcast_hooks(ignore_filter, include_filter),
+              watcher: @watcher,
+              mode: @mode,
+            )
+
+            @watcher.changed
+            @watcher.notify_observers(modified, [], [])
+          end
+
           def test_doesnt_broadcast_watcher_events_when_deleted_list_is_empty
             root_path = Pathname.new(__dir__)
             ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/**"])
@@ -89,6 +134,53 @@ module ShopifyCLI
             HotReload.new(
               @ctx, app,
               broadcast_hooks: broadcast_hooks(ignore_filter),
+              watcher: @watcher,
+              mode: @mode,
+            )
+
+            @watcher.changed
+            @watcher.notify_observers([], [], deleted)
+          end
+
+          def test_doesnt_broadcast_deleted_ignored_files_in_included_directory
+            root_path = Pathname.new(__dir__)
+            ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/announcement.liquid"])
+            include_filter = ShopifyCLI::Theme::IncludeFilter.new(root_path, ["ignored/**"])
+            deleted = ["ignored/announcement.liquid"]
+            SSE::Streams.any_instance
+              .expects(:broadcast)
+              .with(JSON.generate(reload_page: true))
+              .never
+
+            app = -> { [200, {}, []] }
+            HotReload.new(
+              @ctx, app,
+              broadcast_hooks: broadcast_hooks(ignore_filter, include_filter),
+              watcher: @watcher,
+              mode: @mode,
+            )
+
+            @watcher.changed
+            @watcher.notify_observers([], [], deleted)
+          end
+
+          def test_broadcast_deleted_included_files_in_same_directory_as_ignored_files
+            root_path = Pathname.new(__dir__)
+            ignore_filter = ShopifyCLI::Theme::IgnoreFilter.new(root_path, patterns: ["ignored/announcement.liquid"])
+            include_filter = ShopifyCLI::Theme::IncludeFilter.new(root_path, ["ignored/**"])
+            deleted = ["ignored/header.liquid"]
+            SSE::Streams.any_instance
+              .expects(:broadcast)
+              .with(JSON.generate(reload_page: true))
+
+            HotReload::RemoteFileDeleter.any_instance
+              .expects(:delete)
+              .once
+
+            app = -> { [200, {}, []] }
+            HotReload.new(
+              @ctx, app,
+              broadcast_hooks: broadcast_hooks(ignore_filter, include_filter),
               watcher: @watcher,
               mode: @mode,
             )
@@ -137,8 +229,9 @@ module ShopifyCLI
             request.get(path).body
           end
 
-          def broadcast_hooks(ignore_filter = nil)
-            file_change_hook = FileChangeHook.new(@ctx, theme: @theme, ignore_filter: ignore_filter)
+          def broadcast_hooks(ignore_filter = nil, include_filter = nil)
+            file_change_hook = FileChangeHook.new(@ctx, theme: @theme, ignore_filter: ignore_filter,
+              include_filter: include_filter)
             [file_change_hook]
           end
         end
