@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require "shopify_cli"
+require "shopify_cli/environment"
 require "securerandom"
 
 module Extension
@@ -82,7 +83,13 @@ module Extension
     end
 
     def specification_identifier
-      config[ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY]
+      key = ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY
+
+      if ShopifyCLI::Environment.run_as_subprocess?
+        get_extra_field(key)
+      else
+        config[key]
+      end
     end
 
     def registration_id?

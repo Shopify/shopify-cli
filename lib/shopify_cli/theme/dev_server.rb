@@ -180,7 +180,6 @@ module ShopifyCLI
 
           ctx.puts(serving_theme_message)
           ctx.open_url!(address)
-          ctx.open_browser_url!(address)
           ctx.puts(preview_message)
         end
       end

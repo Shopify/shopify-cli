@@ -139,6 +139,18 @@ module Extension
       assert_equal @type, project.specification_identifier
     end
 
+    def test_extension_type_returns_the_type_identifier_from_env
+      project = ExtensionTestHelpers.fake_extension_project
+      type = "type"
+      env = { extra: { ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY => type } }
+
+      ShopifyCLI::Environment.stubs(:run_as_subprocess?).returns(true)
+
+      project.stubs(:env).returns(env)
+
+      assert_equal type, project.specification_identifier
+    end
+
     def test_detects_if_registration_id_is_missing_or_invalid
       invalid_registration_ids = [nil, 0, "wrong"]
 

@@ -29,6 +29,12 @@ module Extension
         parser.on("--extension-id=EXTENSION_ID", "The id of the extension's registration.") do |registration_id|
           flags[:registration_id] = registration_id.gsub('"', "")
         end
+        parser.on("--extension-title=EXTENSION_TITLE", "The title of the extension") do |extension_title|
+          flags[:extension_title] = extension_title.gsub('"', "")
+        end
+        parser.on("--extension-type=EXTENSION_TYPE", "The type of the extension") do |extension_type|
+          flags[:extension_type] = extension_type.gsub('"', "")
+        end
       end
 
       class RuntimeConfiguration
@@ -42,9 +48,13 @@ module Extension
         property :api_key, accepts: String, default: nil
         property :api_secret, accepts: String, default: nil
         property :registration_id, accepts: String, default: nil
+        property :extension_title, accepts: String, default: nil
+        property :extension_type, accepts: String, default: nil
       end
 
-      def call(_args, _command_name)
+      def call(args, _command_name)
+        @ctx.root = args.first || @ctx.root
+
         config = RuntimeConfiguration.new(
           tunnel_requested: tunnel_requested?,
           resource_url: options.flags[:resource_url],
@@ -52,7 +62,9 @@ module Extension
           theme: options.flags[:theme],
           api_key: options.flags[:api_key],
           api_secret: options.flags[:api_secret],
-          registration_id: options.flags[:registration_id]
+          registration_id: options.flags[:registration_id],
+          extension_title: options.flags[:extension_title],
+          extension_type: options.flags[:extension_type],
         )
 
         ShopifyCLI::Result
@@ -68,6 +80,23 @@ module Extension
       end
 
       private
+
+      def project
+        return super unless options.flags[:extension_type]
+
+        @project ||= Extension::Loaders::Project.load(
+          context: options.flags[:context],
+          directory: @ctx.root,
+          api_key: options.flags[:api_key],
+          api_secret: options.flags[:api_secret],
+          registration_id: options.flags[:registration_id],
+          env: {
+            ExtensionProjectKeys::TITLE_KEY => options.flags[:extension_title],
+            ExtensionProjectKeys::REGISTRATION_ID_KEY => options.flags[:registration_id],
+            ExtensionProjectKeys::SPECIFICATION_IDENTIFIER_KEY => options.flags[:extension_type],
+          }
+        )
+      end
 
       def tunnel_requested?
         tunnel = options.flags[:tunnel]
@@ -111,7 +140,8 @@ module Extension
           api_key: runtime_configuration.api_key,
           api_secret: runtime_configuration.api_secret,
           registration_id: runtime_configuration.registration_id,
-          resource_url: runtime_configuration.resource_url
+          resource_url: runtime_configuration.resource_url,
+          project: project,
         )
         runtime_configuration
       end

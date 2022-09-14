@@ -166,8 +166,6 @@ module Extension
         def test_serve_calls_extension_dev_server_with_context
           project = mock
 
-          @spec.stubs(:load_project).with({ context: @context }).returns(project)
-
           ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(
             @context,
             @context.root,
@@ -175,13 +173,11 @@ module Extension
             specification_handler: @spec
           )
 
-          @spec.serve(context: @context)
+          @spec.serve(context: @context, project: project)
         end
 
         def test_serve_calls_extension_dev_server_with_port
           project = mock
-
-          @spec.stubs(:load_project).with({ context: @context, port: 9192 }).returns(project)
 
           ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(
             @context,
@@ -191,13 +187,11 @@ module Extension
             specification_handler: @spec
           )
 
-          @spec.serve(context: @context, port: 9192)
+          @spec.serve(context: @context, port: 9192, project: project)
         end
 
         def test_serve_calls_extension_dev_server_with_theme
           project = mock
-
-          @spec.stubs(:load_project).with({ context: @context, theme: "1234" }).returns(project)
 
           ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(
             @context,
@@ -207,43 +201,18 @@ module Extension
             specification_handler: @spec
           )
 
-          @spec.serve(context: @context, theme: "1234")
+          @spec.serve(context: @context, theme: "1234", project: project)
         end
 
         def test_serve_calls_extension_dev_server_with_nil_when_no_context
-          project = mock
-
-          @spec.stubs(:load_project).with({}).returns(project)
-
           ShopifyCLI::Theme::Extension::DevServer.expects(:start).with(
             nil,
             nil,
-            project: project,
+            project: nil,
             specification_handler: @spec
           )
 
           @spec.serve
-        end
-
-        def test_load_project
-          options = {
-            context: @context,
-            api_key: "api_key_1234",
-            api_secret: "api_secret_5678",
-            registration_id: "registration_id_9ABC",
-          }
-
-          Extension::Loaders::Project
-            .expects(:load)
-            .with(
-              context: options[:context],
-              directory: Dir.pwd,
-              api_key: options[:api_key],
-              api_secret: options[:api_secret],
-              registration_id: options[:registration_id]
-            )
-
-          @spec.send(:load_project, options)
         end
 
         private

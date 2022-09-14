@@ -109,7 +109,7 @@ module ShopifyCLI
 
       def at(dir)
         proj_dir = directory(dir)
-        unless proj_dir
+        if !proj_dir && !ShopifyCLI::Environment.run_as_subprocess?
           raise(ShopifyCLI::Abort, Context.message("core.project.error.not_in_project"))
         end
         @at ||= Hash.new { |h, k| h[k] = new(directory: k) }

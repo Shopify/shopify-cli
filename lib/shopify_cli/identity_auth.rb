@@ -87,6 +87,7 @@ module ShopifyCLI
 
     def fetch_or_auth_partners_token
       if EnvAuthToken.partners_token_present?
+        return Environment.auth_token if Environment.run_as_subprocess?
         return EnvAuthToken.fetch_exchanged_partners_token do |env_token|
           exchange_partners_auth_token(env_token)
         end
