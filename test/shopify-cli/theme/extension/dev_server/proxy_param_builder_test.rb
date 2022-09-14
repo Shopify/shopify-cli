@@ -45,6 +45,26 @@ module ShopifyCLI
             }, @param_builder.build)
           end
 
+          def test_build_with_rack_env_files_outside_blocks_snippets
+            @param_builder
+              .with_extension(extension)
+              .with_rack_env({ "HTTP_COOKIE" => http_cookie_invalid_files })
+              .with_syncer(@syncer)
+
+            assert_equal({}, @param_builder.build)
+          end
+
+          def test_build_does_not_include_files_outside_blocks_snippets
+            @param_builder
+              .with_syncer(@syncer)
+
+            @syncer.expects(:pending_files).returns([
+              extension["invalid.liquid"],
+            ])
+
+            assert_equal({}, @param_builder.build)
+          end
+
           def test_build_with_rack_env_when_current_path_is_a_core_endpoint
             @param_builder
               .with_extension(extension)
@@ -69,6 +89,7 @@ module ShopifyCLI
           def extension
             block = liquid_block_file("block")
             snippet = liquid_snippet_file("snippet")
+            invalid = invalid_liquid_file("invalid")
             # add json to be sure tests ignore these files
             locales = json_file("fr")
 
@@ -76,6 +97,7 @@ module ShopifyCLI
               block.relative_path => block,
               snippet.relative_path => snippet,
               locales.relative_path => locales,
+              invalid.relative_path => invalid,
             }
           end
 
@@ -83,6 +105,15 @@ module ShopifyCLI
             stub(
               "read": "<#{name} file content>",
               "relative_path": "blocks/#{name}.liquid",
+              "liquid?": true,
+              "json?": false
+            )
+          end
+
+          def invalid_liquid_file(name)
+            stub(
+              "read": "<#{name} file content>",
+              "relative_path": "#{name}.liquid",
               "liquid?": true,
               "json?": false
             )
@@ -107,6 +138,10 @@ module ShopifyCLI
           end
 
           def http_cookie(hot_reload_files = "blocks/block.liquid,snippets/snippet.liquid")
+            "cart_currency=EUR; storefront_digest=123; hot_reload_files=#{hot_reload_files}"
+          end
+
+          def http_cookie_invalid_files(hot_reload_files = "invalid.liquid")
             "cart_currency=EUR; storefront_digest=123; hot_reload_files=#{hot_reload_files}"
           end
         end

@@ -15,6 +15,7 @@ module ShopifyCLI
             (request_templates + syncer_templates)
               .select(&:liquid?)
               .uniq(&:relative_path)
+              .reject { |file| proxy_cannot_render?(file) }
               .map { |file| as_param(file) }
               .to_h
           end
@@ -40,6 +41,10 @@ module ShopifyCLI
           end
 
           private
+
+          def proxy_cannot_render?(file)
+            !(file&.relative_path&.include?("blocks/") || file&.relative_path&.include?("snippets/"))
+          end
 
           def as_param(file)
             if file&.relative_path&.include?("blocks/")
