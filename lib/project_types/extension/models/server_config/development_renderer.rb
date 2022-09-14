@@ -25,7 +25,7 @@ module Extension
           when "checkout_post_purchase"
             new(name: "@shopify/post-purchase-ui-extensions", version: "^0.13.2")
           when "pos_ui_extension"
-            new(name: "@shopify/retail-ui-extensions", version: "^0.1.0")
+            new(name: "@shopify/retail-ui-extensions", version: "^0.12.0")
           when "web_pixel_extension"
             nil
           else
