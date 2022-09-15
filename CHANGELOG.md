@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.25.0 - 2022-09-14
+
 ### Added
 * [#2600](https://github.com/Shopify/shopify-cli/pull/2600): Add support to the `SIGTERM` signal
 * [#2602](https://github.com/Shopify/shopify-cli/pull/2602): Add `--only/--ignore` support to the `theme serve` command
