@@ -788,7 +788,7 @@ module ShopifyCLI
             {{*}} {{yellow:A new version of Shopify CLI is available! You have version %s and the latest version is %s.
 
               To upgrade, follow the instructions for the package manager you’re using:
-              {{underline:https://shopify.dev/tools/cli/troubleshooting#upgrade-shopify-cli}}}}
+              {{underline:https://shopify.dev/themes/tools/cli/upgrade-uninstall}}}}
 
           MESSAGE
 
