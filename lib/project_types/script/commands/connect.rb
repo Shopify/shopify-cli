@@ -2,19 +2,14 @@
 module Script
   class Command
     class Connect < ShopifyCLI::Command::SubCommand
-      prerequisite_task :ensure_authenticated
-      prerequisite_task ensure_project_type: :script
-
-      recommend_default_ruby_range
+      hidden_feature
 
       def call(_args, _)
-        Layers::Application::ConnectApp.call(ctx: @ctx, force: true)
-      rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.connect.error.operation_failed"))
+        @ctx.abort(@ctx.message("script.deprecated"))
       end
 
       def self.help
-        ShopifyCLI::Context.new.message("script.connect.help", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
+        ShopifyCLI::Context.new.message("script.deprecated")
       end
     end
   end
