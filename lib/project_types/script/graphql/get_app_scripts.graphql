@@ -1,6 +1,0 @@
-query GetAppScripts($appKey: String!, $extensionPointName: ExtensionPointName!) {
-  appScripts(appKeys: [$appKey], extensionPointName: $extensionPointName) {
-    uuid
-    title
-  }
-}

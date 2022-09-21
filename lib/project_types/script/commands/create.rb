@@ -3,9 +3,7 @@
 module Script
   class Command
     class Create < ShopifyCLI::Command::SubCommand
-      prerequisite_task :ensure_authenticated
-
-      recommend_default_ruby_range
+      hidden_feature
 
       options do |parser, flags|
         parser.on("--title=TITLE") { |title| flags[:title] = title }
@@ -14,35 +12,12 @@ module Script
         parser.on("--branch=BRANCH") { |branch| flags[:branch] = branch }
       end
 
-      def call(args, _name)
-        form = Forms::Create.ask(@ctx, args, options.flags)
-        return @ctx.puts(self.class.help) if form.nil?
-
-        unless !form.title.empty? && form.extension_point
-          return @ctx.puts(self.class.help)
-        end
-
-        project = Layers::Application::CreateScript.call(
-          ctx: @ctx,
-          language: options.flags[:language]&.downcase || "wasm",
-          sparse_checkout_branch: options.flags[:branch] || "main",
-          title: form.title,
-          extension_point_type: form.extension_point,
-        )
-        @ctx.puts(@ctx.message("script.create.change_directory_notice", project.title))
-      rescue StandardError => e
-        UI::ErrorHandler.pretty_print_and_raise(e, failed_op: @ctx.message("script.create.error.operation_failed"))
+      def call(_args, _)
+        @ctx.abort(@ctx.message("script.deprecated"))
       end
 
       def self.help
-        allowed_apis = Layers::Application::ExtensionPoints.available_types.map { |type| "{{cyan:#{type}}}" }
-        allowed_languages = Layers::Application::ExtensionPoints.all_languages.map { |lang| "{{cyan:#{lang}}}" }
-        ShopifyCLI::Context.message(
-          "script.create.help",
-          ShopifyCLI::TOOL_NAME,
-          allowed_apis.join(", "),
-          allowed_languages.join(", ")
-        )
+        ShopifyCLI::Context.new.message("script.deprecated")
       end
     end
   end
