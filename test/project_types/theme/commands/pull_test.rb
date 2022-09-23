@@ -9,6 +9,9 @@ module Theme
       def setup
         super
 
+        ShopifyCLI::DB.stubs(:exists?).returns(true)
+        ShopifyCLI::DB.stubs(:get).with(:shop).returns("test.myshopify.com")
+
         @ctx = ShopifyCLI::Context.new
         @command = Theme::Command::Pull.new(@ctx)
 
@@ -254,7 +257,8 @@ module Theme
       end
 
       def test_pull_with_asset_errors_displays_warning
-        CLI::UI::Prompt.expects(:ask).returns(@theme)
+        CLI::UI::Prompt.expects(:ask).with("Select a theme to pull from test.myshopify.com",
+          allow_empty: false).returns(@theme)
         @ctx.expects(:warn).with(@ctx.message("theme.pull.done_with_errors")).once
         @ctx.expects(:done).never
 

@@ -9,6 +9,9 @@ module Theme
       def setup
         super
 
+        ShopifyCLI::DB.stubs(:exists?).returns(true)
+        ShopifyCLI::DB.stubs(:get).with(:shop).returns("test.myshopify.com")
+
         @ctx = ShopifyCLI::Context.new
         @command = Theme::Command::Publish.new(@ctx)
 
@@ -61,7 +64,8 @@ module Theme
       end
 
       def test_publish_asks_to_select
-        CLI::UI::Prompt.expects(:ask).returns(@theme)
+        CLI::UI::Prompt.expects(:ask).with("Select theme to push to test.myshopify.com",
+          allow_empty: false).returns(@theme)
         CLI::UI::Prompt.expects(:confirm).returns(true)
 
         @theme.expects(:publish)

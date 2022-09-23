@@ -2,10 +2,13 @@
 
 require "shopify_cli/theme/theme"
 require "shopify_cli/theme/development_theme"
+require "project_types/theme/commands/common/shop_helper"
 
 module Theme
   class Command
     class Open < ShopifyCLI::Command::SubCommand
+      include Common::ShopHelper
+
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -60,7 +63,7 @@ module Theme
         form = Forms::Select.ask(
           @ctx,
           [],
-          title: @ctx.message("theme.open.select"),
+          title: @ctx.message("theme.open.select", shop),
           root: nil
         )
         form&.theme

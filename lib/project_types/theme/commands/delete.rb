@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/theme"
 require "shopify_cli/theme/development_theme"
+require "project_types/theme/commands/common/shop_helper"
 
 module Theme
   class Command
     class Delete < ShopifyCLI::Command::SubCommand
+      include Common::ShopHelper
+
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -22,7 +25,7 @@ module Theme
           form = Forms::Select.ask(
             @ctx,
             [],
-            title: @ctx.message("theme.delete.select"),
+            title: @ctx.message("theme.delete.select", shop),
             exclude_roles: ["live"],
             include_foreign_developments: options.flags[:show_all],
             cmd: :delete
