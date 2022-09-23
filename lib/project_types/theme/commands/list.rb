@@ -2,10 +2,13 @@
 
 require "shopify_cli/theme/theme"
 require "project_types/theme/presenters/themes_presenter"
+require "project_types/theme/commands/common/shop_helper"
 
 module Theme
   class Command
     class List < ShopifyCLI::Command::SubCommand
+      include Common::ShopHelper
+
       recommend_default_ruby_range
 
       def call(_args, _name)
@@ -24,10 +27,6 @@ module Theme
 
       def themes_presenter
         Theme::Presenters::ThemesPresenter.new(@ctx, nil)
-      end
-
-      def shop
-        ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
       end
     end
   end

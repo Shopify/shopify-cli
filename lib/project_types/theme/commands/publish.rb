@@ -1,9 +1,12 @@
 # frozen_string_literal: true
 require "shopify_cli/theme/theme"
+require "project_types/theme/commands/common/shop_helper"
 
 module Theme
   class Command
     class Publish < ShopifyCLI::Command::SubCommand
+      include Common::ShopHelper
+
       recommend_default_ruby_range
 
       options do |parser, flags|
@@ -17,7 +20,7 @@ module Theme
           form = Forms::Select.ask(
             @ctx,
             [],
-            title: @ctx.message("theme.publish.select"),
+            title: @ctx.message("theme.publish.select", shop),
             exclude_roles: ["live", "development", "demo"],
             cmd: :publish
           )

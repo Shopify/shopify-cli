@@ -7,11 +7,16 @@ module Theme
     class OpenTest < MiniTest::Test
       def setup
         super
+
+        ShopifyCLI::DB.stubs(:exists?).returns(true)
+        ShopifyCLI::DB.stubs(:get).with(:shop).returns("test.myshopify.com")
+
         @command = Theme::Command::Open.new(ctx)
       end
 
       def test_open_without_flags
-        CLI::UI::Prompt.expects(:ask).returns(theme)
+        CLI::UI::Prompt.expects(:ask).with("Select a theme to open in test.myshopify.com",
+          allow_empty: false).returns(theme)
 
         ctx.expects(:open_browser_url!).with("https://test.myshopify.io/preview")
 

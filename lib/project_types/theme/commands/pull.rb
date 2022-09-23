@@ -5,12 +5,14 @@ require "shopify_cli/theme/ignore_filter"
 require "shopify_cli/theme/include_filter"
 require "shopify_cli/theme/syncer"
 require "project_types/theme/commands/common/root_helper"
+require "project_types/theme/commands/common/shop_helper"
 require "project_types/theme/conversions/include_glob"
 require "project_types/theme/conversions/ignore_glob"
 
 module Theme
   class Command
     class Pull < ShopifyCLI::Command::SubCommand
+      include Common::ShopHelper
       include Common::RootHelper
 
       recommend_default_ruby_range
@@ -97,7 +99,7 @@ module Theme
         form = Forms::Select.ask(
           @ctx,
           [],
-          title: @ctx.message("theme.pull.select"),
+          title: @ctx.message("theme.pull.select", shop),
           root: root,
         )
         form&.theme

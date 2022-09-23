@@ -47,7 +47,7 @@ module Theme
           not_found: "Theme #%s does not exist",
           no_themes_error: "You don't have any theme to be published.",
           no_themes_resolution: "Try to create an unpublished theme with {{command:theme push -u -t <theme_name>}}.",
-          select: "Select theme to push to",
+          select: "Select theme to push to %s",
           confirm: "Are you sure you want to make %s the new live theme on %s?",
         },
         forms: {
@@ -87,7 +87,7 @@ module Theme
             pushing: "Pushing theme files to %s (#%s) on %s",
           },
           push: "Pushing theme files to Shopify",
-          select: "Select theme to push to",
+          select: "Select theme to push to %s",
           live: "Are you sure you want to push to your live theme?",
           theme: "\n  Theme: {{blue:%s #%s}} {{green:[live]}}",
           deprecated_themeid: <<~WARN,
@@ -285,7 +285,7 @@ module Theme
 
             Run without options to select the theme to delete from a list.
           HELP
-          select: "Select theme to delete",
+          select: "Select theme to delete from %s",
           done: "%s theme(s) deleted",
           no_themes_error: "You don't have any theme to be deleted.",
           no_themes_resolution: "Try to create an unpublished theme with {{command:theme push -u -t <theme_name>}}.",
@@ -330,7 +330,7 @@ module Theme
 
             Run without options to select theme from a list.
           HELP
-          select: "Select a theme to pull from",
+          select: "Select a theme to pull from %s",
           pulling: "Pulling theme files from %s (#%s) on %s",
           done: "Theme pulled successfully.",
           done_with_errors: "{{warning:Your theme was pulled with errors.}}",
@@ -340,7 +340,7 @@ module Theme
           theme_not_found: "Theme \"%s\" doesn't exist",
         },
         open: {
-          select: "Select a theme to open",
+          select: "Select a theme to open in %s",
           theme_not_found: "Theme \"%s\" doesn't exist",
           details: <<~DETAILS,
             {{*}} {{bold:%s}}
