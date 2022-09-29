@@ -339,7 +339,7 @@ module CLI
           else
             $stdin.getc
           end
-        rescue IOError
+        rescue Errno::EIO, Errno::EPIPE, IOError
           "\e"
         end
 
