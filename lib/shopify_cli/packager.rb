@@ -90,10 +90,15 @@ module ShopifyCLI
       spec_contents = spec_contents.gsub("SHOPIFY_CLI_GEM_CHECKSUM", gem_checksum)
 
       puts "Writing generated formula\n  To: #{build_path}\n\n"
-      File.write(build_path, spec_contents)
+      File.write(build_path, spec_contents.gsub("SHOPIFY_CLI_BINSTUB_SUFFIX", ""))
 
       puts "Writing generated formula\n  To: #{build_path_2}\n\n"
-      File.write(build_path_2, spec_contents.sub("class ShopifyCli < Formula", "class ShopifyCliAT2 < Formula"))
+      File.write(
+        build_path_2,
+        spec_contents
+          .sub("class ShopifyCli < Formula", "class ShopifyCliAT2 < Formula")
+          .sub("SHOPIFY_CLI_BINSTUB_SUFFIX", "2")
+      )
     end
 
     private
