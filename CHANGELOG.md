@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.26.0 - 2022-10-03
+
 ### Added
 * [#2636](https://github.com/Shopify/shopify-cli/pull/2636): Show store when the CLI prompts users to select a theme
 
