@@ -69,14 +69,13 @@ module ShopifyCLI
     def build_homebrew
       root_dir = File.join(PACKAGING_DIR, "homebrew")
 
-      build_path = File.join(BUILDS_DIR, "shopify-cli.rb")
-      build_path_2 = File.join(BUILDS_DIR, "shopify-cli@2.rb")
-      puts "\nBuilding Homebrew packages"
+      build_path = File.join(BUILDS_DIR, "shopify-cli@2.rb")
+      puts "\nBuilding Homebrew package"
 
-      puts "Generating formulae…"
+      puts "Generating formula…"
       File.delete(build_path) if File.exist?(build_path)
 
-      spec_contents = File.read(File.join(root_dir, "shopify-cli.base.rb"))
+      spec_contents = File.read(File.join(root_dir, "shopify-cli@2.base.rb"))
       spec_contents = spec_contents.gsub("SHOPIFY_CLI_VERSION", ShopifyCLI::VERSION)
 
       puts "Grabbing sha256 checksum from Rubygems.org"
@@ -90,15 +89,7 @@ module ShopifyCLI
       spec_contents = spec_contents.gsub("SHOPIFY_CLI_GEM_CHECKSUM", gem_checksum)
 
       puts "Writing generated formula\n  To: #{build_path}\n\n"
-      File.write(build_path, spec_contents.gsub("SHOPIFY_CLI_BINSTUB_SUFFIX", ""))
-
-      puts "Writing generated formula\n  To: #{build_path_2}\n\n"
-      File.write(
-        build_path_2,
-        spec_contents
-          .sub("class ShopifyCli < Formula", "class ShopifyCliAT2 < Formula")
-          .sub("SHOPIFY_CLI_BINSTUB_SUFFIX", "2")
-      )
+      File.write(build_path, spec_contents)
     end
 
     private

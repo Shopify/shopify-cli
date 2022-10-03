@@ -10,7 +10,7 @@
 require "formula"
 require "fileutils"
 
-class ShopifyCli < Formula
+class ShopifyCliAT2 < Formula
   module RubyBin
     def ruby_bin
       Formula["ruby"].opt_bin
@@ -95,7 +95,7 @@ class ShopifyCli < Formula
     ruby_libs = Dir.glob("#{prefix}/gems/*/lib")
     exe = "shopify"
     file = Pathname.new("#{brew_gem_prefix}/bin/#{exe}")
-    (bin + "#{file.basename}SHOPIFY_CLI_BINSTUB_SUFFIX").open("w") do |f|
+    (bin + "#{file.basename}2").open("w") do |f|
       f << <<~RUBY
         #!#{ruby_bin}/ruby -rjson --disable-gems
         ENV['ORIGINAL_ENV']=ENV.to_h.to_json
