@@ -52,7 +52,12 @@ module Extension
           argo_runtime(context).supports?(:public_url)
         end
 
-        def serve(context:, port:, tunnel_url:, resource_url:)
+        def serve(**options)
+          context = options[:context]
+          port = options[:port]
+          tunnel_url = options[:tunnel_url]
+          resource_url = options[:resource_url]
+
           Features::ArgoServe.new(
             specification_handler: self,
             argo_runtime: argo_runtime(context),
