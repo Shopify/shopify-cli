@@ -8,23 +8,57 @@ module Extension
       class DefaultTest < MiniTest::Test
         include ExtensionTestHelpers::TestExtensionSetup
 
-        def test_tagline_returns_empty_string_if_not_defined_in_content
-          base_type = Default.new(specification)
-          base_type.stubs(:identifier).returns("INVALID")
+        def setup
+          super
+          @default_spec = Default.new(specification)
+        end
 
-          assert_equal "", base_type.tagline
+        def test_tagline_returns_empty_string_if_not_defined_in_content
+          @default_spec.stubs(:identifier).returns("INVALID")
+
+          assert_equal "", @default_spec.tagline
+        end
+
+        def test_serve
+          context = mock
+          argo_runtime = mock
+          argo_serve = mock
+
+          @default_spec.stubs(:argo_runtime).with(context).returns(argo_runtime)
+
+          Features::ArgoServe
+            .expects(:new)
+            .with(
+              specification_handler: @default_spec,
+              argo_runtime: argo_runtime,
+              context: context,
+              port: 9999,
+              tunnel_url: "url://tunnel_url",
+              resource_url: "url://resource_url"
+            )
+            .returns(argo_serve)
+
+          argo_serve.expects(:call)
+
+          @default_spec.serve(
+            context: context,
+            port: 9999,
+            tunnel_url: "url://tunnel_url",
+            resource_url: "url://resource_url",
+            other: "other property",
+          )
         end
 
         def test_valid_extension_contexts_returns_empty_array
-          assert_empty(Default.new(specification).valid_extension_contexts)
+          assert_empty(@default_spec.valid_extension_contexts)
         end
 
         def test_extension_context_returns_nil
-          assert_nil(Default.new(specification).extension_context(@context))
+          assert_nil(@default_spec.extension_context(@context))
         end
 
         def test_graphql_identifier_is_upcased
-          assert_equal specification.identifier.upcase, Default.new(specification).graphql_identifier
+          assert_equal specification.identifier.upcase, @default_spec.graphql_identifier
         end
 
         def test_name_defaults_to_specification_name
