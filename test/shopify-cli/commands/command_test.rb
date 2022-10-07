@@ -29,6 +29,51 @@ module ShopifyCLI
         assert_match(CLI::UI.fmt(ShopifyCLI::Commands::Populate::Customer.help), io.join)
       end
 
+      def test_check_version_when_it_is_activated
+        Environment.stubs(:test?).returns(false)
+        Environment.stubs(:run_as_subprocess?).returns(false)
+
+        context = mock
+        context.expects(:warn)
+
+        Command.check_version(
+          version(1),
+          range: range(2, 4),
+          runtime: "Ruby",
+          context: context
+        )
+      end
+
+      def test_check_version_when_running_in_a_test_environment
+        Environment.stubs(:test?).returns(true)
+        Environment.stubs(:run_as_subprocess?).returns(false)
+
+        context = mock
+        context.expects(:warn).never
+
+        Command.check_version(
+          version(1),
+          range: range(2, 4),
+          runtime: "Ruby",
+          context: context
+        )
+      end
+
+      def test_check_version_when_running_as_subprocess
+        Environment.stubs(:test?).returns(false)
+        Environment.stubs(:run_as_subprocess?).returns(true)
+
+        context = mock
+        context.expects(:warn).never
+
+        Command.check_version(
+          version(1),
+          range: range(2, 4),
+          runtime: "Ruby",
+          context: context
+        )
+      end
+
       [
         "",
         "http://",
@@ -60,6 +105,23 @@ module ShopifyCLI
             ])
           end
         end
+      end
+
+      private
+
+      def version(major)
+        stub(
+          major: major,
+          minor: 0,
+          patch: 0
+        )
+      end
+
+      def range(from, to)
+        stub(
+          from: version(from),
+          to: version(to),
+        )
       end
     end
   end
