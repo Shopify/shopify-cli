@@ -29,5 +29,11 @@ module ShopifyCLI
       path = "/some/path/inside/the/system"
       assert_equal(path.split("/")[0...-2].join("/"), Utilities.directory("foo.txt", path))
     end
+
+    def test_deep_merge_merges_two_hashes_deeply
+      first = { a: { b: 1, c: 1 } }
+      second = { a: { b: 2 } }
+      assert_equal({ a: { b: 2, c: 1 } }, Utilities.deep_merge(first, second))
+    end
   end
 end

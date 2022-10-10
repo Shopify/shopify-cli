@@ -1,8 +1,9 @@
 # frozen_string_literal: true
+
 module Theme
   class Project < ShopifyCLI::ProjectType
     require Project.project_filepath("messages/messages")
-    register_messages(Theme::Messages::MESSAGES)
+    register_messages(Theme::Messages.all)
   end
 
   class Command < ShopifyCLI::Command::ProjectCommand
