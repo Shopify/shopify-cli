@@ -145,7 +145,7 @@ module Theme
               It looks like you are using credentials that do not work with {{command:%s theme serve}}.
             ERROR_MESSAGE
             help_message: <<~HELP_MESSAGE,
-              Run {{command:%s logout}} and {{command:%s login --password "" --store STORE}} to force the authentication thought your browser.
+              Run {{command:%s logout}} and {{command:%s login --password "" --store STORE}} to authenticate again.
             HELP_MESSAGE
           },
           operation: {
@@ -390,5 +390,31 @@ module Theme
         },
       },
     }.freeze
+
+    def self.all
+      # In order to support theme development inside CLI3, we spawn CLI2 as a
+      # subprocess. Whenever an error happens, we want to show the updated
+      # version of the commands for the user to try.
+      if ShopifyCLI::Environment.run_as_subprocess?
+        ShopifyCLI::Utilities.deep_merge(MESSAGES, {
+          theme: {
+            serve: {
+              auth: {
+                error_message: <<~ERROR_MESSAGE,
+                  It looks like you are using credentials that do not work with {{command:%s theme dev}}.
+                ERROR_MESSAGE
+                help_message: <<~HELP_MESSAGE,
+                  Run {{command:%s auth logout}} and {{command:%s theme dev --store STORE}} to authenticate again.
+                HELP_MESSAGE
+              },
+              binding_error: "Couldn't bind to localhost." \
+                " To serve your theme, set a different address with {{command:%s theme dev --host=<address>}}",
+            },
+          },
+        })
+      else
+        MESSAGES
+      end
+    end
   end
 end
