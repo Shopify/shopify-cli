@@ -81,7 +81,19 @@ module Theme
         end
       end
 
+      def test_valid_authentication_method_when_storefront_renderer_from_CLI3_in_env_is_present
+        ShopifyCLI::Environment.stubs(:storefront_renderer_auth_token).returns("CLI3 SFR Token")
+        ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")
+        ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns(nil)
+
+        ShopifyCLI::Context.expects(:abort).never
+
+        command = Theme::Command::Serve.new(@ctx)
+        command.send(:valid_authentication_method!)
+      end
+
       def test_valid_authentication_method_when_storefront_renderer_token_and_password_are_present
+        ShopifyCLI::Environment.stubs(:storefront_renderer_auth_token).returns(nil)
         ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")
         ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns("SFR token")
 
@@ -92,6 +104,7 @@ module Theme
       end
 
       def test_valid_authentication_method_when_storefront_renderer_token_is_present_and_password_is_not_present
+        ShopifyCLI::Environment.stubs(:storefront_renderer_auth_token).returns(nil)
         ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns(nil)
         ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns("SFR token")
 
@@ -112,6 +125,7 @@ module Theme
           .with("theme.serve.auth.help_message", ShopifyCLI::TOOL_NAME, ShopifyCLI::TOOL_NAME)
           .returns(help_message)
 
+        ShopifyCLI::Environment.stubs(:storefront_renderer_auth_token).returns(nil)
         ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")
         ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns(nil)
 
