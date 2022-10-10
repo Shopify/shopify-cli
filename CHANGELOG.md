@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.27.0 - 2022-10-10
+
 ### Fixed
 * [#2645](https://github.com/Shopify/shopify-cli/pull/2645): Fix issue that prevents the execution of `shopify extension serve` in some scenarios
 
