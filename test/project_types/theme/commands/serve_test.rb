@@ -81,7 +81,7 @@ module Theme
         end
       end
 
-      def test_valid_authentication_method_when_storefront_renderer_from_CLI3_in_env_is_present
+      def test_valid_authentication_method_when_storefront_renderer_from_cli3_in_env_is_present
         ShopifyCLI::Environment.stubs(:storefront_renderer_auth_token).returns("CLI3 SFR Token")
         ShopifyCLI::DB.stubs(:get).with(:shopify_exchange_token).returns("password")
         ShopifyCLI::DB.stubs(:get).with(:storefront_renderer_production_exchange_token).returns(nil)
