@@ -407,6 +407,8 @@ module Theme
                   Run {{command:%s auth logout}} and {{command:%s theme dev --store STORE}} to authenticate again.
                 HELP_MESSAGE
               },
+              binding_error: "Couldn't bind to localhost." \
+                " To serve your theme, set a different address with {{command:%s theme dev --host=<address>}}",
             },
           },
         })

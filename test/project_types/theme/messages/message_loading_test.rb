@@ -14,6 +14,7 @@ module Theme
 
         assert_match(/%s theme serve/, messages.dig(:theme, :serve, :auth, :error_message))
         assert_match(/%s logout/, messages.dig(:theme, :serve, :auth, :help_message))
+        assert_match(/%s theme serve/, messages.dig(:theme, :serve, :binding_error))
       end
 
       def test_new_messages_refer_to_cli3_commands
@@ -22,6 +23,7 @@ module Theme
 
         assert_match(/%s theme dev/, messages.dig(:theme, :serve, :auth, :error_message))
         assert_match(/%s auth logout/, messages.dig(:theme, :serve, :auth, :help_message))
+        assert_match(/%s theme dev/, messages.dig(:theme, :serve, :binding_error))
       end
     end
   end
