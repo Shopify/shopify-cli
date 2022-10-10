@@ -77,7 +77,8 @@ module Theme
       end
 
       def storefront_renderer_token
-        ShopifyCLI::DB.get(:storefront_renderer_production_exchange_token)
+        ShopifyCLI::Environment.storefront_renderer_auth_token ||
+          ShopifyCLI::DB.get(:storefront_renderer_production_exchange_token)
       end
     end
   end
