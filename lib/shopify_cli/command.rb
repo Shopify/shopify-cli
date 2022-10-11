@@ -117,7 +117,7 @@ module ShopifyCLI
       end
 
       def check_version(version, range:, runtime:, context: Context.new)
-        return if Environment.test?
+        return if Environment.test? || Environment.run_as_subprocess?
         return if range.nil?
 
         version_without_pre_nor_build = Utilities.version_dropping_pre_and_build(version)
