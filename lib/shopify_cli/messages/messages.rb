@@ -498,7 +498,7 @@ module ShopifyCLI
             "{{i}} Authentication required. Login to the URL below with your %s credentials to continue.",
 
           servlet: {
-            success_response: "You've successfuly logged into the Shopify CLI!",
+            success_response: "You've successfully logged into the Shopify CLI!",
             invalid_request_response: "Invalid request: %s",
             invalid_state_response: "The anti-forgery state token does not match the initial request.",
           },
