@@ -19,20 +19,20 @@ module Theme
             theme(4, role: "other"),
             theme(5, role: "live"),
             theme(6, role: "development"),
+            theme(7, role: "demo"),
           ])
 
         presenter = ThemesPresenter.new(ctx, root)
 
         actual_presenters = presenter.all.map(&:to_s)
 
-        assert_equal(7, actual_presenters.size)
+        assert_equal(6, actual_presenters.size)
         assert_match(/Theme.*\[live\]/, actual_presenters[0])
         assert_match(/Theme.*\[live\]/, actual_presenters[1])
         assert_match(/Theme.*\[unpublished\]/, actual_presenters[2])
         assert_match(/Theme.*\[unpublished\]/, actual_presenters[3])
         assert_match(/Theme.*\[development\]/, actual_presenters[4])
         assert_match(/Theme.*\[development\]/, actual_presenters[5])
-        assert_match(/Theme.*\[other\]/, actual_presenters[6])
       end
 
       private
