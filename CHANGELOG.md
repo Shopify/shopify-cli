@@ -2,15 +2,18 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
-## Version 2.27.0 - 2022-10-10
+## Version 2.28.0 - 2022-10-17
 
 ### Fixed
-* [#2645](https://github.com/Shopify/shopify-cli/pull/2645): Fix issue that prevents the execution of `shopify extension serve` in some scenarios
 * [#2646](https://github.com/Shopify/shopify-cli/pull/2646): Demo themes shouldn't appear in the `shopify theme pull/push/list/open` commands
 
 ### Changed
 * [#2648](https://github.com/Shopify/shopify-cli/pull/2648): Do not warn users when the CLI 2.x is running as a subprocess
 
+## Version 2.27.0 - 2022-10-10
+
+### Fixed
+* [#2645](https://github.com/Shopify/shopify-cli/pull/2645): Fix issue that prevents the execution of `shopify extension serve` in some scenarios
 ## Version 2.26.0 - 2022-10-03
 
 ### Added
