@@ -14,7 +14,13 @@ module ShopifyCLI
       end
 
       def ignore_path?(path)
-        ignored_by_ignore_filter?(path) || ignored_by_include_filter?(path)
+        is_ignored = ignored_by_ignore_filter?(path) || ignored_by_include_filter?(path)
+
+        if is_ignored && @ctx
+          @ctx.debug("ignore #{path}")
+        end
+
+        is_ignored
       end
 
       private
