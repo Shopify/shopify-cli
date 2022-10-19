@@ -541,6 +541,9 @@ module ShopifyCLI
             forbidden: <<~FORBIDDEN,
               Command not allowed with current login. Please check your login details with {{command:%s whoami}}. You may need to request additional permissions for this action.
             FORBIDDEN
+            theme_access_invalid_password: "Invalid password. Please check that it was generated from Theme Access app"\
+              " for the current store.",
+            theme_access_no_store: "No store found. Please pass it through the environment variable SHOPIFY_SHOP",
             internal_server_error: "{{red:{{x}} An unexpected error occurred on Shopify.}}",
             internal_server_error_debug: "\n{{red:Response details:}}\n%s\n\n",
             invalid_url: "Invalid URL: %s",

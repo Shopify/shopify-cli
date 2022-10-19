@@ -10,6 +10,8 @@ module ShopifyCLI
       Constants::EnvironmentVariables::SPIN_NAMESPACE,
       Constants::EnvironmentVariables::SPIN_HOST,
     ]
+    # https://github.com/Shopify/themekit-access/blob/4c3c917d78443160dcf24376a8b5ac6b9bef0bcd/app/models/password_token.rb#L8
+    THEME_ACCESS_PASSWORD_PREFIX = "shptka_"
 
     def self.ruby_version(context: Context.new)
       output, status = context.capture2e("ruby", "--version")
@@ -187,6 +189,10 @@ module ShopifyCLI
         Constants::EnvironmentVariables::RUN_AS_SUBPROCESS,
         env_variables: env_variables
       )
+    end
+
+    def self.theme_access_password?
+      admin_auth_token&.start_with?(THEME_ACCESS_PASSWORD_PREFIX)
     end
   end
 end
