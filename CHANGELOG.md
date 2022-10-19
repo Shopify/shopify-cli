@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2664](https://github.com/Shopify/shopify-cli/pull/2664): Enable Theme Kit Access passwords
+
 ## Version 2.28.0 - 2022-10-17
 
 ### Fixed

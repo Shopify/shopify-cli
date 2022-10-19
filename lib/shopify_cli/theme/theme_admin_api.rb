@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative "theme_access_api"
+
 module ShopifyCLI
   module Theme
     class ThemeAdminAPI
@@ -29,11 +31,11 @@ module ShopifyCLI
       end
 
       def get_shop_or_abort # rubocop:disable Naming/AccessorMethodName
-        ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
+        api_client.get_shop_or_abort(@ctx)
       end
 
       def rest_request(**args)
-        status, body, response = ShopifyCLI::AdminAPI.rest_request(
+        status, body, response = api_client.rest_request(
           @ctx,
           shop: @shop,
           api_version: API_VERSION,
@@ -66,6 +68,10 @@ module ShopifyCLI
       end
 
       private
+
+      def api_client
+        @api_client ||= Environment.theme_access_password? ? ThemeAccessAPI : ShopifyCLI::AdminAPI
+      end
 
       def permission_error
         ensure_user_error = @ctx.message("theme.ensure_user_error", shop)

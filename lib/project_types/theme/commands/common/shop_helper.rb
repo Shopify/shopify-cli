@@ -5,7 +5,7 @@ module Theme
     module Common
       module ShopHelper
         def shop
-          ShopifyCLI::AdminAPI.get_shop_or_abort(@ctx)
+          ShopifyCLI::Theme::ThemeAdminAPI.new(@ctx).get_shop_or_abort
         end
       end
     end

@@ -59,7 +59,8 @@ module ShopifyCLI
 
       # Monorail
       MONORAIL_REAL_EVENTS = "MONORAIL_REAL_EVENTS"
-      STORE = "SHOPIFY_CLI_STORE"
+
+      STORE = "SHOPIFY_SHOP"
     end
 
     module SupportedVersions
