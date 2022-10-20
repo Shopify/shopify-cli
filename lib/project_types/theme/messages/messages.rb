@@ -124,6 +124,8 @@ module Theme
 
             Options:
               {{command:-t, --theme=NAME_OR_ID}} Theme ID or name of the remote theme.
+              {{command:-o, --only}}             Hot reload only files that match the specified pattern.
+              {{command:-x, --ignore}}           Skip hot reloading any files that match the specified pattern.
               {{command:--port=PORT}}            Local port to serve theme preview from.
               {{command:--poll}}                 Force polling to detect file changes.
               {{command:--host=HOST}}            Set which network interface the web server listens on. The default value is 127.0.0.1.
