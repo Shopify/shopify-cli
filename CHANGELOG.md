@@ -14,6 +14,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2646](https://github.com/Shopify/shopify-cli/pull/2646): Demo themes shouldn't appear in the `shopify theme pull/push/list/open` commands
+* [#2650](https://github.com/Shopify/shopify-cli/pull/2650): The `shopify theme push`/`shopify theme serve` commands no longer freeze in some scenarios
 
 ### Changed
 * [#2648](https://github.com/Shopify/shopify-cli/pull/2648): Do not warn users when the CLI 2.x is running as a subprocess

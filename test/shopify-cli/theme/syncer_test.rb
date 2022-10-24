@@ -1,32 +1,31 @@
 # frozen_string_literal: true
+
 require "test_helper"
 require "timecop"
+
 require "shopify_cli/theme/syncer"
-require "shopify_cli/theme/theme_admin_api_throttler/errors"
 require "shopify_cli/theme/theme"
 
 module ShopifyCLI
   module Theme
     class SyncerTest < Minitest::Test
+      include TestHelpers::FakeDB
+
       def setup
         super
         root = ShopifyCLI::ROOT + "/test/fixtures/theme"
         @ctx = TestHelpers::FakeContext.new(root: root)
+
         @theme = Theme.new(@ctx, root: root)
         @theme.stubs(:shop).returns("dev-theme-server-store.myshopify.com")
+
         @syncer = Syncer.new(@ctx, theme: @theme, stable: true)
         @syncer.stubs(:wait).returns(nil)
         @syncer.stubs(:theme_created_at_runtime?).returns(false)
 
-        ShopifyCLI::DB.stubs(:exists?).with(:shop).returns(true)
-        ShopifyCLI::DB
-          .stubs(:get)
-          .with(:shop)
-          .returns("dev-theme-server-store.myshopify.com")
-        ShopifyCLI::DB
-          .stubs(:get)
-          .with(:development_theme_id)
-          .returns("12345678")
+        stubs_cli_db(:shop, "dev-theme-server-store.myshopify.com")
+        stubs_cli_db(:development_theme_id, "12345678")
+
         File.any_instance.stubs(:write)
       end
 
@@ -62,18 +61,6 @@ module ShopifyCLI
 
         @syncer.enqueue_updates([@theme["assets/theme.css"]])
         @syncer.wait!
-      end
-
-      def test_update_with_bulk_request
-        @syncer.api_client.deactivate_throttler!
-        @syncer.api_client.admin_api.expects(:rest_request)
-        @syncer.send(:update, @theme["assets/theme.css"])
-      end
-
-      def test_update_with_regular_request_bulk
-        @syncer.api_client.activate_throttler!
-        @syncer.api_client.bulk.expects(:enqueue)
-        @syncer.send(:update, @theme["assets/theme.css"])
       end
 
       def test_update_binary_file
@@ -430,8 +417,8 @@ module ShopifyCLI
           .returns([200, {}, {}])
 
         @syncer.upload_theme!(delay_low_priority_files: true)
-
         @syncer.wait!
+
         assert_empty(@syncer)
       end
 
@@ -483,41 +470,6 @@ module ShopifyCLI
           .returns([200, {}, {}])
 
         @syncer.upload_theme!
-      end
-
-      def test_upload_theme_deletes_missing_files_when_delete_is_true
-        @syncer.stubs(:overwrite_json?).returns(false)
-        @syncer.stubs(:fetch_checksums!)
-        @syncer.checksums[removed_css_file.relative_path] = "removed non-JSON file"
-        @syncer.checksums[removed_json_file.relative_path] = "removed JSON file"
-
-        @syncer.expects(:enqueue_deletes).with([removed_css_file])
-        @syncer.expects(:enqueue_json_deletes).with([removed_json_file])
-        @syncer.expects(:enqueue_updates).with(@theme.liquid_files)
-        @syncer.expects(:enqueue_updates).with(@theme.static_asset_files)
-        @syncer.expects(:enqueue_json_updates).with(@theme.json_files)
-        @syncer.expects(:enqueue_delayed_files_updates)
-        @syncer.api_client.expects(:deactivate_throttler!)
-
-        @syncer.start_threads
-        @syncer.upload_theme!(delete: true)
-      end
-
-      def test_upload_theme_deletes_missing_files_when_delete_is_false
-        @syncer.stubs(:overwrite_json?).returns(false)
-        @syncer.stubs(:fetch_checksums!)
-        @syncer.checksums[removed_css_file.relative_path] = "removed non-JSON file"
-        @syncer.checksums[removed_json_file.relative_path] = "removed JSON file"
-
-        @syncer.expects(:enqueue_deletes).never
-        @syncer.expects(:enqueue_json_deletes).never
-        @syncer.expects(:enqueue_updates).with(@theme.liquid_files)
-        @syncer.expects(:enqueue_updates).with(@theme.static_asset_files)
-        @syncer.expects(:enqueue_json_updates).with(@theme.json_files)
-        @syncer.expects(:enqueue_delayed_files_updates)
-
-        @syncer.start_threads
-        @syncer.upload_theme!(delete: false)
       end
 
       def test_backoff_near_api_limit
@@ -759,55 +711,59 @@ module ShopifyCLI
         refute(@syncer.broken_file?(file))
       end
 
-      # Case where file is an asset but has errors, resp is: { errors => { asset => ["..."]}}
-      def test_parse_valid_theme_asset_with_errors_bulk
-        op = stub(file: "sections/footer.liquid", method: "update")
-        expected_result = ["Something is wrong with this theme file."]
+      def test_parse_valid_theme_asset_with_errors
+        operation = stub(file: "sections/footer.liquid", method: "update")
+        expected_error = ["Something is wrong with this theme file."]
         body = {
           "errors" => {
-            "asset" => expected_result,
+            "asset" => expected_error,
           },
         }
-        err = ShopifyCLI::Theme::ThemeAdminAPIThrottler::AssetUploadError.new(body, response: { body: body })
+        error = ShopifyCLI::API::APIRequestError.new(body, response: { body: body })
 
-        result = @syncer.send(:parse_api_errors, op, err)
-        assert_equal(result, expected_result)
+        actual_error = @syncer.send(:parse_api_errors, operation, error)
+
+        assert_equal(expected_error, actual_error)
       end
 
-      # Case where file is not a valid theme asset, resp is: { errors => ["..."]}
-      def test_parse_invalid_theme_asset_with_errors_bulk
-        op = stub(file: "package.json", method: "update")
-        expected_result = ["This is not a valid theme file", "Please check the file type"]
+      def test_parse_invalid_theme_asset_with_many_errors
+        operation = stub(file: "package.json", method: "update")
+        expected_error = [
+          "This is not a valid theme file",
+          "Please check the file type",
+        ]
         body = {
-          "errors" => expected_result,
+          "errors" => expected_error,
         }
-        err = ShopifyCLI::Theme::ThemeAdminAPIThrottler::AssetUploadError.new(body, response: { body: body })
+        error = ShopifyCLI::API::APIRequestError.new(body, response: { body: body })
 
-        result = @syncer.send(:parse_api_errors, op, err)
-        assert_equal(result, expected_result)
+        actual_error = @syncer.send(:parse_api_errors, operation, error)
+
+        assert_equal(expected_error, actual_error)
       end
 
-      def test_parse_invalid_theme_asset_with_error_bulk
-        op = stub(file: "package.json", method: "update")
+      def test_parse_invalid_theme_asset_with_a_single_error
+        operation = stub(file: "package.json", method: "update")
         error = "This is not a valid theme file"
         body = {
           "errors" => error,
         }
-        err = ShopifyCLI::Theme::ThemeAdminAPIThrottler::AssetUploadError.new(body, response: { body: body })
+        err = ShopifyCLI::API::APIRequestError.new(body, response: { body: body })
 
-        result = @syncer.send(:parse_api_errors, op, err)
-        expected_result = [error]
-        assert_equal(result, expected_result)
+        actual_error = @syncer.send(:parse_api_errors, operation, err)
+        expected_error = [error]
+
+        assert_equal(expected_error, actual_error)
       end
 
       def test_parse_api_errors_wiht_a_standard_errors
         operation = stub(file: "package.json", method: "update")
         error = Errno::EADDRINUSE.new
 
-        actual_result = @syncer.send(:parse_api_errors, operation, error)
-        expected_result = ["Address already in use"]
+        actual_error = @syncer.send(:parse_api_errors, operation, error)
+        expected_error = ["Address already in use"]
 
-        assert_equal(expected_result, actual_result)
+        assert_equal(expected_error, actual_error)
       end
 
       private

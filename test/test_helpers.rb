@@ -4,6 +4,7 @@ module TestHelpers
   autoload :Constants, "test_helpers/constants"
   autoload :FakeTask, "test_helpers/fake_task"
   autoload :FakeContext, "test_helpers/fake_context"
+  autoload :FakeDB, "test_helpers/fake_db"
   autoload :FakeFS, "test_helpers/fake_fs"
   autoload :FakeProject, "test_helpers/fake_project"
   autoload :FakeUI, "test_helpers/fake_ui"

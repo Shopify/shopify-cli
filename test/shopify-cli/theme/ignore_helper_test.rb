@@ -5,79 +5,77 @@ require "shopify_cli/theme/ignore_helper"
 
 module ShopifyCLI
   module Theme
-    class Syncer
-      class IgnoreHelperTest < Minitest::Test
-        include IgnoreHelper
+    class IgnoreHelperTest < Minitest::Test
+      include IgnoreHelper
 
-        attr_reader :ignore_filter, :include_filter
+      attr_reader :ignore_filter, :include_filter
 
-        def test_ignore_operation_when_it_returns_true
-          path = mock
-          operation = stub(file_path: path)
+      def test_ignore_operation_when_it_returns_true
+        path = mock
+        operation = stub(file_path: path)
 
-          expects(:ignore_path?).with(path).returns(true)
+        expects(:ignore_path?).with(path).returns(true)
 
-          assert(ignore_operation?(operation))
-        end
+        assert(ignore_operation?(operation))
+      end
 
-        def test_ignore_operation_when_it_returns_false
-          path = mock
-          operation = stub(file_path: path)
+      def test_ignore_operation_when_it_returns_false
+        path = mock
+        operation = stub(file_path: path)
 
-          expects(:ignore_path?).with(path).returns(false)
+        expects(:ignore_path?).with(path).returns(false)
 
-          refute(ignore_operation?(operation))
-        end
+        refute(ignore_operation?(operation))
+      end
 
-        def test_ignore_file_when_it_returns_true
-          relative_path = mock
-          file = stub(relative_path: relative_path)
+      def test_ignore_file_when_it_returns_true
+        relative_path = mock
+        file = stub(relative_path: relative_path)
 
-          expects(:ignore_path?).with(relative_path).returns(true)
+        expects(:ignore_path?).with(relative_path).returns(true)
 
-          assert(ignore_file?(file))
-        end
+        assert(ignore_file?(file))
+      end
 
-        def test_ignore_file_when_it_returns_false
-          relative_path = mock
-          file = stub(relative_path: relative_path)
+      def test_ignore_file_when_it_returns_false
+        relative_path = mock
+        file = stub(relative_path: relative_path)
 
-          expects(:ignore_path?).with(relative_path).returns(false)
+        expects(:ignore_path?).with(relative_path).returns(false)
 
-          refute(ignore_file?(file))
-        end
+        refute(ignore_file?(file))
+      end
 
-        def test_ignore_path_when_ignored_by_ignore_filter
-          path = mock
-          @ignore_filter = stub(ignore?: true)
-          @include_filter = stub(match?: true)
+      def test_ignore_path_when_ignored_by_ignore_filter
+        path = mock
+        @ignore_filter = stub(ignore?: true)
+        @include_filter = stub(match?: true)
 
-          assert(ignore_path?(path))
-        end
+        assert(ignore_path?(path))
+      end
 
-        def test_ignore_path_when_ignored_by_ignore_and_include_filter
-          path = mock
-          @ignore_filter = stub(ignore?: true)
-          @include_filter = stub(match?: false)
+      def test_ignore_path_when_ignored_by_ignore_and_include_filter
+        path = mock
+        @ignore_filter = stub(ignore?: true)
+        @include_filter = stub(match?: false)
 
-          assert(ignore_path?(path))
-        end
+        assert(ignore_path?(path))
+      end
 
-        def test_ignore_path_when_ignored_by_include_filter
-          path = mock
-          @ignore_filter = stub(ignore?: false)
-          @include_filter = stub(match?: false)
+      def test_ignore_path_when_ignored_by_include_filter
+        path = mock
+        @ignore_filter = stub(ignore?: false)
+        @include_filter = stub(match?: false)
 
-          assert(ignore_path?(path))
-        end
+        assert(ignore_path?(path))
+      end
 
-        def test_ignore_path_when_path_is_not_ignored
-          path = mock
-          @ignore_filter = stub(ignore?: false)
-          @include_filter = stub(match?: true)
+      def test_ignore_path_when_path_is_not_ignored
+        path = mock
+        @ignore_filter = stub(ignore?: false)
+        @include_filter = stub(match?: true)
 
-          refute(ignore_path?(path))
-        end
+        refute(ignore_path?(path))
       end
     end
   end

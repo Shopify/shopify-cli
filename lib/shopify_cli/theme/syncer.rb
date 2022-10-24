@@ -5,17 +5,18 @@ require "json"
 require "base64"
 require "forwardable"
 
+require_relative "backoff_helper"
+require_relative "ignore_helper"
+require_relative "theme_admin_api"
+
 require_relative "syncer/checksums"
+require_relative "syncer/downloader"
 require_relative "syncer/error_reporter"
-require_relative "syncer/json_delete_handler"
-require_relative "syncer/json_update_handler"
 require_relative "syncer/merger"
 require_relative "syncer/operation"
 require_relative "syncer/standard_reporter"
 require_relative "syncer/unsupported_script_warning"
-require_relative "theme_admin_api"
-require_relative "ignore_helper"
-require_relative "theme_admin_api_throttler"
+require_relative "syncer/uploader"
 
 module ShopifyCLI
   module Theme
@@ -23,8 +24,7 @@ module ShopifyCLI
       extend Forwardable
 
       include ShopifyCLI::Theme::IgnoreHelper
-      include JsonDeleteHandler
-      include JsonUpdateHandler
+      include ShopifyCLI::Theme::BackoffHelper
 
       QUEUEABLE_METHODS = [
         :get,         # - Updates the local file with the remote file content
@@ -33,7 +33,7 @@ module ShopifyCLI
         :union_merge, # - Union merges the local file content with the remote file content
       ]
 
-      attr_reader :theme, :checksums, :error_checksums, :api_client
+      attr_reader :ctx, :theme, :checksums, :error_checksums, :api_client, :pending
       attr_accessor :include_filter, :ignore_filter
 
       def_delegators :@error_reporter, :has_any_error?
@@ -57,12 +57,6 @@ module ShopifyCLI
         # Thread making the API requests.
         @threads = []
 
-        # Mutex used to pause all threads when backing-off when hitting API rate limits
-        @backoff_mutex = Mutex.new
-
-        # Mutex used to coordinate changes in the `pending` list
-        @pending_mutex = Mutex.new
-
         # Latest theme assets checksums. Updated on each upload.
         @checksums = Checksums.new(theme)
 
@@ -71,14 +65,14 @@ module ShopifyCLI
 
         # Do not use the throttler when --stable is passed or a Theme Access password is set
         # (Theme Access API is not compatible yet with bulks)
-        throttler_enabled = !stable && !Environment.theme_access_password?
+        @bulk_updates_activated = !stable && !Environment.theme_access_password?
 
         # Initialize `api_client` on main thread
-        @api_client = ThemeAdminAPIThrottler.new(
-          @ctx,
-          ThemeAdminAPI.new(@ctx, @theme.shop),
-          throttler_enabled
-        )
+        @api_client = ThemeAdminAPI.new(ctx, theme.shop)
+
+        # Initialize backoff helper on main thread to pause all threads when the
+        # requests are reaching API rate limits.
+        initialize_backoff_helper!
       end
 
       def lock_io!
@@ -146,7 +140,6 @@ module ShopifyCLI
       end
 
       def shutdown
-        api_client.shutdown
         @queue.close unless @queue.closed?
       ensure
         @threads.each { |thread| thread.join if thread.alive? }
@@ -169,64 +162,70 @@ module ShopifyCLI
       end
 
       def upload_theme!(delay_low_priority_files: false, delete: true, &block)
-        fetch_checksums!
-
-        if delete
-          removed_json_files, removed_files = checksums
-            .keys
-            .-(@theme.theme_files.map(&:relative_path))
-            .map { |file| @theme[file] }
-            .partition(&:json?)
-
-          enqueue_deletes(removed_files)
-          enqueue_json_deletes(removed_json_files)
-        end
-
-        enqueue_updates(@theme.liquid_files)
-        enqueue_json_updates(@theme.json_files)
-
-        if delay_low_priority_files
-          # Wait for liquid & JSON files to upload, because those are rendered remotely
-          wait!(&block)
-        end
-
-        # Process lower-priority files in the background
-
-        # Assets are served locally, so can be uploaded in the background
-        enqueue_updates(@theme.static_asset_files)
-
-        unless delay_low_priority_files
-          wait!(&block)
-        end
-
-        api_client.deactivate_throttler!
-        enqueue_delayed_files_updates
+        uploader = Uploader.new(self, delete, delay_low_priority_files, &block)
+        uploader.upload!
       end
 
       def download_theme!(delete: true, &block)
-        fetch_checksums!
+        downloader = Downloader.new(self, delete, &block)
+        downloader.download!
+      end
 
-        if delete
-          # Delete local files not present remotely
-          missing_files = @theme.theme_files
-            .reject { |file| checksums.has?(file) }.uniq
-            .reject { |file| ignore_file?(file) }
-          missing_files.each do |file|
-            @ctx.debug("rm #{file.relative_path}")
-            file.delete
+      def bulk_updates_activated?
+        @bulk_updates_activated
+      end
+
+      def enqueueable?(operation)
+        file = operation.file
+        method = operation.method
+
+        # Already enqueued or ignored
+        return false if @pending.include?(operation) || ignore_operation?(operation)
+
+        if [:update, :get].include?(method) && file.exist?
+          # File is fixed (and it has been never updated)
+          if !!@error_checksums.delete(file.checksum)
+            @standard_reporter.report(operation.as_fix_message)
           end
+
+          return checksums.file_has_changed?(file)
         end
 
-        enqueue_get(checksums.keys)
+        true
+      end
 
-        wait!(&block)
+      def handle_operation_error(operation, error)
+        error_suffix = ":\n  " + parse_api_errors(operation, error).join("\n  ")
+        report_error(operation, error_suffix)
+      end
+
+      def overwrite_json?
+        theme_created_at_runtime? || @overwrite_json
+      end
+
+      def update_checksums(api_response)
+        api_response.values.flatten.each do |asset|
+          next unless asset["key"]
+          checksums[asset["key"]] = asset["checksum"]
+        end
+
+        checksums.reject_duplicated_checksums!
+      end
+
+      def report_file_error(file, error_message = "")
+        path = file.relative_path
+
+        @error_checksums << checksums[path]
+        @error_reporter.report(error_message)
       end
 
       private
 
       def report_error(operation, error_suffix = "")
-        @error_checksums << checksums[operation.file_path]
-        @error_reporter.report("#{operation.as_error_message}#{error_suffix}")
+        file = operation.file
+        error_message = "#{operation.as_error_message}#{error_suffix}"
+
+        report_file_error(file, error_message)
       end
 
       def enqueue(method, file)
@@ -235,22 +234,24 @@ module ShopifyCLI
 
         operation = Operation.new(@ctx, method, @theme[file])
 
-        # Already enqueued
-        return if @pending.include?(operation)
-
-        if ignore_operation?(operation)
-          @ctx.debug("ignore #{operation.file_path}")
-          return
-        end
-
-        if [:update, :get].include?(method) && operation.file.exist?
-          is_fixed = !!@error_checksums.delete(operation.file.checksum)
-          @standard_reporter.report(operation.as_fix_message) if is_fixed
-          return unless checksums.file_has_changed?(operation.file)
-        end
+        return unless enqueueable?(operation)
 
         @pending << operation
         @queue << operation unless @queue.closed?
+      end
+
+      def report_performed_operation(operation)
+        file = operation.file
+
+        if file.warnings.any?
+          warning_message =
+            operation.as_synced_message(color: :yellow) +
+            UnsupportedScriptWarning.new(@ctx, file).to_s
+
+          return @error_reporter.report(warning_message)
+        end
+
+        @standard_reporter.report(operation.as_synced_message)
       end
 
       def perform(operation)
@@ -258,36 +259,15 @@ module ShopifyCLI
         wait_for_backoff!
         @ctx.debug(operation.to_s)
 
-        send(operation.method, operation.file) do |response|
-          raise response if response.is_a?(StandardError)
+        response = send(operation.method, operation.file)
 
-          file = operation.file
+        report_performed_operation(operation)
+        backoff_if_near_limit!(response)
 
-          if file.warnings.any?
-            warning_message =
-              operation.as_synced_message(color: :yellow) +
-              UnsupportedScriptWarning.new(@ctx, file).to_s
-            @error_reporter.report(warning_message)
-          else
-            @standard_reporter.report(operation.as_synced_message)
-          end
-
-          # Check if the API told us we're near the rate limit
-          if !backingoff? && (limit = response["x-shopify-shop-api-call-limit"])
-            used, total = limit.split("/").map(&:to_i)
-            backoff_if_near_limit!(used, total)
-          end
-        rescue StandardError => error
-          handle_operation_error(operation, error)
-        ensure
-          @pending_mutex.synchronize do
-            # Avoid abrupt jumps in the progress bar
-            wait(0.05)
-            @pending.delete(operation)
-          end
-        end
       rescue StandardError => error
         handle_operation_error(operation, error)
+      ensure
+        @pending.delete(operation)
       end
 
       def update(file)
@@ -300,15 +280,16 @@ module ShopifyCLI
         end
 
         path = "themes/#{@theme.id}/assets.json"
-        req_body = JSON.generate(asset: asset)
 
-        api_client.put(path: path, body: req_body) do |_status, resp_body, response|
-          update_checksums(resp_body)
+        _status, body, response = api_client.put(
+          path: path,
+          body: JSON.generate(asset: asset)
+        )
+        file.warnings = body.dig("asset", "warnings")
 
-          file.warnings = resp_body.dig("asset", "warnings")
+        update_checksums(body)
 
-          yield(response) if block_given?
-        end
+        response
       end
 
       def get(file)
@@ -326,7 +307,7 @@ module ShopifyCLI
           file.write(body.dig("asset", "value"))
         end
 
-        yield(response)
+        response
       end
 
       def delete(file)
@@ -337,7 +318,7 @@ module ShopifyCLI
           })
         )
 
-        yield(response)
+        response
       end
 
       def union_merge(file)
@@ -346,11 +327,11 @@ module ShopifyCLI
           query: URI.encode_www_form("asset[key]" => file.relative_path),
         )
 
-        return yield(response) unless file.text?
+        return response unless file.text?
 
         remote_content = body.dig("asset", "value")
 
-        return yield(response) if remote_content.nil?
+        return response if remote_content.nil?
 
         content = Merger.union_merge(file, remote_content)
 
@@ -358,16 +339,7 @@ module ShopifyCLI
 
         enqueue(:update, file)
 
-        yield(response)
-      end
-
-      def update_checksums(api_response)
-        api_response.values.flatten.each do |asset|
-          next unless asset["key"]
-          checksums[asset["key"]] = asset["checksum"]
-        end
-
-        checksums.reject_duplicated_checksums!
+        response
       end
 
       def parse_api_errors(operation, exception)
@@ -397,33 +369,8 @@ module ShopifyCLI
         ["The asset #{operation.file} could not be synced #{cause} #{backtrace}"]
       end
 
-      def backoff_if_near_limit!(used, limit)
-        if used > limit - @threads.size
-          @ctx.debug("Near API call limit, waiting 2 sec…")
-          @backoff_mutex.synchronize { wait(2) }
-        end
-      end
-
-      def overwrite_json?
-        theme_created_at_runtime? || @overwrite_json
-      end
-
       def theme_created_at_runtime?
         @theme.created_at_runtime?
-      end
-
-      def backingoff?
-        @backoff_mutex.locked?
-      end
-
-      def wait_for_backoff!
-        # Sleeping in the mutex in another thread. Wait for unlock
-        @backoff_mutex.synchronize {} if backingoff?
-      end
-
-      def handle_operation_error(operation, error)
-        error_suffix = ":\n  " + parse_api_errors(operation, error).join("\n  ")
-        report_error(operation, error_suffix)
       end
 
       def wait(duration)
