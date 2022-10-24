@@ -17,7 +17,7 @@ module ShopifyCLI
 
           ShopifyCLI::AdminAPI
             .stubs(:rest_request)
-            .returns([207, [], {}])
+            .returns([207, {}, {}])
         end
 
         def test_upload_when_it_bulk_uploads

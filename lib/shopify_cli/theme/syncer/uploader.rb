@@ -109,21 +109,29 @@ module ShopifyCLI
         end
 
         def enqueue_bulk_updates(files)
-          bulk = Bulk.new(ctx, theme, api_client)
+          retries = 0
+          pending_items = files.map { |file| bulk_item(file) }
 
-          files
-            .map { |file| bulk_item(file) }
-            .each { |request| bulk.enqueue(request) }
+          while pending_items.any? && retries < 4
+            bulk = Bulk.new(ctx, theme, api_client)
 
-          bulk.shutdown
+            files
+              .map { |file| bulk_item(file) }
+              .each { |request| bulk.enqueue(request) }
 
-          return unless bulk.remaining_items.any?
+            bulk.shutdown
+
+            retries += 1
+            pending_items = bulk.remaining_items
+          end
+
+          return unless pending_items.any?
 
           # Remaining items are handled in the background when the bulk timeout
           # is exceeded
-          bulk.remaining_items.times { update_progress_bar! }
+          pending_items.size.times { update_progress_bar! }
 
-          syncer.enqueue_updates(bulk.remaining_items.map(&:file))
+          syncer.enqueue_updates(pending_items.map(&:file))
           syncer.wait!
         end
 
@@ -184,8 +192,8 @@ module ShopifyCLI
         end
 
         def uploadable?(file)
+          return false unless file.exist?
           return false if ignore_file?(file)
-          return true unless file.exist?
 
           checksums.file_has_changed?(file)
         end
