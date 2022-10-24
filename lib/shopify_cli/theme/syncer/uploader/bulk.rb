@@ -12,9 +12,10 @@ module ShopifyCLI
         class Bulk
           include ShopifyCLI::Theme::BackoffHelper
 
-          MAX_BULK_BYTESIZE = 102_400 # 100KB
-          MAX_BULK_FILES = 10 # files
-          SHUTDOWN_TIMEOUT = 20 # seconds
+          MAX_BULK_BYTESIZE = 102_400   # 100KB
+          MAX_BULK_FILES = 10           # 10 files
+          SHUTDOWN_TIMEOUT = 20         # 20 seconds
+          SHUTDOWN_RETRY_INTERVAL = 0.2 # 200 milliseconds
 
           attr_reader :ctx, :theme, :admin_api
 
@@ -95,7 +96,7 @@ module ShopifyCLI
           def wait_bulk_items
             start_time = Time.now
 
-            wait(0.2) while remaining_items? && start_time - Time.now < SHUTDOWN_TIMEOUT
+            wait(SHUTDOWN_RETRY_INTERVAL) while remaining_items? && start_time - Time.now < SHUTDOWN_TIMEOUT
 
             files = remaining_items.map { |item| "- #{item.key}" }.join("\n")
 
