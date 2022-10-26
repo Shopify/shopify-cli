@@ -4,6 +4,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2668](https://github.com/Shopify/shopify-cli/pull/2668): Introduce `--only/--ignore` in the `shopify theme serve` help message
+* [#2667](https://github.com/Shopify/shopify-cli/pull/2667): Fix for "X zip is required for packaging a theme" on Windows
 
 ## Version 2.29.0 - 2022-10-19
 
