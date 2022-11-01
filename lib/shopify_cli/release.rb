@@ -120,10 +120,8 @@ module ShopifyCLI
     end
 
     def update_homebrew_repo
-      %w(shopify-cli.rb shopify-cli@2.rb).each do |source_filename|
-        source_file = File.join(package_dir, source_filename)
-        FileUtils.copy(source_file, homebrew_path)
-      end
+      source_file = File.join(package_dir, "shopify-cli@2.rb")
+      FileUtils.copy(source_file, homebrew_path)
       Dir.chdir(homebrew_path) do
         system_or_fail("git commit -am '#{homebrew_update_message}'", "commit homebrew update")
         system_or_fail("git push -u origin #{homebrew_release_branch}", "push homebrew branch")
