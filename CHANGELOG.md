@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2676](https://github.com/Shopify/shopify-cli/pull/2676): Introduce shorthand `-e` for `--theme-editor-sync` in `shopify theme serve`
+
 ## Version 2.30.0 - 2022-11-01
 
 ### Fixed

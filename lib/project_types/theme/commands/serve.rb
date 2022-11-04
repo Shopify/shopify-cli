@@ -23,7 +23,7 @@ module Theme
         parser.on("--port=PORT") { |port| flags[:port] = port.to_i }
         parser.on("--poll") { flags[:poll] = true }
         parser.on("--live-reload=MODE") { |mode| flags[:mode] = as_reload_mode(mode) }
-        parser.on("--theme-editor-sync") { flags[:editor_sync] = true }
+        parser.on("-e", "--theme-editor-sync") { flags[:editor_sync] = true }
         parser.on("--stable") { flags[:stable] = true }
         parser.on("-t", "--theme=NAME_OR_ID") { |theme| flags[:theme] = theme }
         parser.on("-o", "--only=PATTERN", Conversions::IncludeGlob) do |pattern|
