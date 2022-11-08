@@ -4,14 +4,9 @@ module Theme
   module Models
     module SpecificationHandlers
       class Theme
-        REQUIRED_FOLDERS = %w(config layout sections templates templates/customers).map { |folder| "#{folder}/" }
-
-        attr_accessor :folders
-        attr_accessor :missing_folders
+        REQUIRED_FOLDERS = %w(config layout sections templates).map { |folder| "#{folder}/" }
 
         def initialize(root)
-          return if root.nil?
-
           Dir.chdir(root) do
             self.folders = Dir["*/"] + Dir["templates/*/"]
           end
@@ -23,6 +18,9 @@ module Theme
         end
 
         private
+
+        attr_accessor :folders
+        attr_accessor :missing_folders
 
         def validate
           self.missing_folders = REQUIRED_FOLDERS - folders
