@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "project_types/theme/models/specification_handlers/theme"
+
 module Theme
   class Command
     module Common
@@ -33,6 +35,18 @@ module Theme
           end
 
           "."
+        end
+
+        def is_theme_directory?(root)
+          theme_directory = Theme::Models::SpecificationHandlers::Theme.new(root)
+          unless theme_directory.valid?
+            return unless Forms::ConfirmStore.ask(
+              @ctx,
+              [],
+              title: @ctx.message("theme.confirm_current_directory"),
+              force: options.flags[:force],
+            ).confirmed?
+          end
         end
 
         private

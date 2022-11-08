@@ -3,7 +3,6 @@
 require "shopify_cli/theme/theme"
 require "shopify_cli/theme/syncer"
 require "project_types/theme/commands/common/root_helper"
-require "project_types/theme/models/specification_handlers/theme"
 
 module Theme
   class Command
@@ -18,15 +17,7 @@ module Theme
 
       def call(_args, name)
         root = root_value(options, name)
-        theme_specification_handler = Theme::Models::SpecificationHandlers::Theme.new(root)
-        unless theme_specification_handler.valid?
-          return unless Forms::ConfirmStore.ask(
-            @ctx,
-            [],
-            title: @ctx.message("theme.confirm_current_directory"),
-            force: options.flags[:force],
-          ).confirmed?
-        end
+        return unless is_theme_directory?(root)
 
         theme = create_theme(root)
 
