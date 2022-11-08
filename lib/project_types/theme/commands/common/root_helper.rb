@@ -37,7 +37,7 @@ module Theme
           "."
         end
 
-        def is_theme_directory?(root)
+        def theme_directory?(root)
           theme_directory = Theme::Models::SpecificationHandlers::Theme.new(root)
           unless theme_directory.valid?
             return unless Forms::ConfirmStore.ask(

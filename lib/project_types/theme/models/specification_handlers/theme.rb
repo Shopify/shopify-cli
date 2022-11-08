@@ -18,14 +18,14 @@ module Theme
         end
 
         def valid?
-          self.validate
-          self.missing_folders.empty?
+          validate
+          missing_folders.empty?
         end
 
         private
 
         def validate
-          self.missing_folders = REQUIRED_FOLDERS - self.folders
+          self.missing_folders = REQUIRED_FOLDERS - folders
         end
       end
     end

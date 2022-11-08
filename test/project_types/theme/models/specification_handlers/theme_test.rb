@@ -27,7 +27,7 @@ module Theme
           additional_folders = ["webpack/", "foobar/"]
           @theme_directory.folders = Theme::REQUIRED_FOLDERS + additional_folders
           assert @theme_directory.valid?
-          assert_empty @theme_directory.missing_folders
+          assert_empty(@theme_directory.missing_folders)
         end
       end
     end

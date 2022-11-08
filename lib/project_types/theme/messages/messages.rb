@@ -18,7 +18,8 @@ module Theme
         ENSURE_USER
         stable_flag_suggestion: "If the current command isn't working as expected," \
           " we suggest re-running the command with the {{command: --stable}} flag",
-        confirm_current_directory: "It doesn’t seem like you’re running this command in a theme directory. Are you sure you want to proceed?",
+        confirm_current_directory: "It doesn’t seem like you’re running this command in a theme directory. " \
+          "Are you sure you want to proceed?",
         init: {
           help: <<~HELP,
             {{command:%s theme init}}: Clones a Git repository to use as a starting point for building a new theme.
