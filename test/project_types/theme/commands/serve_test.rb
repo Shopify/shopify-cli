@@ -9,6 +9,7 @@ module Theme
 
       def setup
         super
+        Dir.chdir(ShopifyCLI::ROOT + "/test/fixtures/theme")
         @ctx = ShopifyCLI::Context.new
       end
 
@@ -65,10 +66,12 @@ module Theme
       end
 
       def test_can_specify_root
-        ShopifyCLI::Theme::DevServer.expects(:start)
-          .with(@ctx, "dist", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+        specified_root = ShopifyCLI::ROOT + "/test/fixtures/theme"
 
-        run_serve_command(["dist"])
+        ShopifyCLI::Theme::DevServer.expects(:start)
+          .with(@ctx, specified_root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+
+        run_serve_command([specified_root])
       end
 
       def test_can_specify_theme
