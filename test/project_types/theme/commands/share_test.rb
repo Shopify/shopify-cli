@@ -7,6 +7,7 @@ module Theme
     class ShareTest < MiniTest::Test
       def setup
         super
+        Dir.chdir(ShopifyCLI::ROOT + "/test/fixtures/theme")
         @command = Theme::Command::Share.new(ctx)
       end
 

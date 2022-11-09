@@ -38,15 +38,16 @@ module Theme
         end
 
         def theme_directory?(root)
-          theme_directory = Theme::Models::SpecificationHandlers::Theme.new(root)
-          unless theme_directory.valid?
-            return unless Forms::ConfirmStore.ask(
-              @ctx,
-              [],
-              title: @ctx.message("theme.confirm_current_directory"),
-              force: options.flags[:force],
-            ).confirmed?
-          end
+          Theme::Models::SpecificationHandlers::Theme.new(root).valid?
+        end
+
+        def current_directory_confirmed?
+          Forms::ConfirmStore.ask(
+            @ctx,
+            [],
+            title: @ctx.message("theme.confirm_current_directory"),
+            force: options.flags[:force],
+          ).confirmed?
         end
 
         private
