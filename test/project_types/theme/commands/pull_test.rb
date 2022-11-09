@@ -92,9 +92,9 @@ module Theme
         @command.call([], "pull")
       end
 
-      def test_pull_with_root
+      def test_pull_with_empty_root
         specified_root = "dist"
-        Dir.mkdir(specified_root)
+        FileUtils.mkdir(specified_root)
 
         ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
           .with(@ctx, root: specified_root, identifier: 1234)
@@ -117,7 +117,7 @@ module Theme
         @command.options.flags[:theme] = 1234
         @command.call([], "pull")
 
-        Dir.rmdir(specified_root)
+        FileUtils.rmdir(specified_root)
       end
 
       def test_pull_live_theme
