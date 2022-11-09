@@ -43,6 +43,8 @@ module Theme
 
       def call(_args, name)
         root = root_value(options, name)
+        return unless theme_directory?(root) || current_directory_confirmed?
+
         delete = !options.flags[:nodelete]
         theme = find_theme(root, **options.flags)
         return if theme.nil?

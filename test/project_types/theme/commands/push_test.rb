@@ -8,6 +8,7 @@ module Theme
 
       def setup
         super
+        Dir.chdir(ShopifyCLI::ROOT + "/test/fixtures/theme")
 
         ShopifyCLI::DB.stubs(:exists?).returns(true)
         ShopifyCLI::DB.stubs(:get).with(:shop).returns("test.myshopify.com")
@@ -96,11 +97,13 @@ module Theme
       end
 
       def test_push_with_root
+        specified_root = ShopifyCLI::ROOT + "/test/fixtures/theme"
+
         ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
-          .with(@ctx, root: "dist", identifier: 1234)
+          .with(@ctx, root: specified_root, identifier: 1234)
           .returns(@theme)
 
-        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with("dist").returns(@ignore_filter)
+        ShopifyCLI::Theme::IgnoreFilter.expects(:from_path).with(specified_root).returns(@ignore_filter)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
           .with(@ctx, theme: @theme, include_filter: @include_filter, ignore_filter: @ignore_filter, stable: nil)
@@ -112,7 +115,7 @@ module Theme
         @syncer.expects(:upload_theme!).with(delete: true)
         @ctx.expects(:done)
 
-        stubs_command_parser(["dist"])
+        stubs_command_parser([specified_root])
 
         @command.options.flags[:theme] = 1234
         @command.call([], "push")
