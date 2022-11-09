@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2680](https://github.com/Shopify/shopify-cli/pull/2680): Validate on `shopify theme share/pull/push/serve` if users are running the command in a theme/empty directory
+
 ## Version 2.31.0 - 2022-11-07
 
 ### Added
