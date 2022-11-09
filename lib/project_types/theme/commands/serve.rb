@@ -34,6 +34,7 @@ module Theme
           flags[:ignores] ||= []
           flags[:ignores] |= pattern
         end
+        parser.on("-f", "--force") { flags[:force] = true }
       end
 
       def call(_args, name)

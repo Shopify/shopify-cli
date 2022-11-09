@@ -34,11 +34,12 @@ module Theme
           flags[:ignores] ||= []
           flags[:ignores] |= pattern
         end
+        parser.on("-f", "--force") { flags[:force] = true }
       end
 
       def call(_args, name)
         root = root_value(options, name)
-        return unless (Dir.exist?(root) && Dir["#{root}/*"].empty?) ||
+        return unless exist_and_empty?(root) ||
           theme_directory?(root) ||
           current_directory_confirmed?
 

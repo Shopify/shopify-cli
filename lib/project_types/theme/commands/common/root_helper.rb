@@ -50,6 +50,10 @@ module Theme
           ).confirmed?
         end
 
+        def exist_and_empty?(root)
+          Dir.exist?(root) && Dir["#{root}/*"].empty?
+        end
+
         private
 
         def default_argv(options)
