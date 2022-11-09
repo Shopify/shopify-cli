@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2681](https://github.com/Shopify/shopify-cli/pull/2681): Enable Theme Access passwords for theme serve
+
 ## Version 2.31.0 - 2022-11-07
 
 ### Added
