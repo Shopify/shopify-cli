@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "stringio"
 require "time"
 require "cgi"
@@ -20,6 +21,7 @@ module ShopifyCLI
         "transfer-encoding",
         "upgrade",
         "content-security-policy",
+        "content-length",
       ]
 
       class Proxy
@@ -54,14 +56,14 @@ module ShopifyCLI
               "POST", env["PATH_INFO"],
               headers: headers,
               query: query,
-              form_data: form_data.merge(replace_templates).merge(_method: env["REQUEST_METHOD"]),
+              form_data: form_data.merge(replace_templates).merge(_method: env["REQUEST_METHOD"])
             )
           else
             request(
               env["REQUEST_METHOD"], env["PATH_INFO"],
               headers: headers,
               query: query,
-              body_stream: (env["rack.input"] if has_body?(headers)),
+              body_stream: (env["rack.input"] if has_body?(headers))
             )
           end
 
@@ -97,7 +99,7 @@ module ShopifyCLI
 
         def bearer_token
           Environment.storefront_renderer_auth_token ||
-          ShopifyCLI::DB.get(:storefront_renderer_production_exchange_token) ||
+            ShopifyCLI::DB.get(:storefront_renderer_production_exchange_token) ||
             raise(KeyError, "storefront_renderer_production_exchange_token missing")
         end
 
@@ -152,11 +154,13 @@ module ShopifyCLI
 
         def secure_session_id_expired?
           return true unless @secure_session_id && @last_session_cookie_refresh
+
           Time.now - @last_session_cookie_refresh >= SESSION_COOKIE_MAX_AGE
         end
 
         def extract_secure_session_id_from_response_headers(headers)
           return unless headers["set-cookie"]
+
           headers["set-cookie"][SESSION_COOKIE_REGEXP, 1]
         end
 
@@ -173,7 +177,7 @@ module ShopifyCLI
 
         def get_response_headers(response, env)
           response_headers = normalize_headers(
-            response.respond_to?(:headers) ? response.headers : response.to_hash
+            response.respond_to?(:headers) ? response.headers : response.to_hash,
           )
           # According to https://tools.ietf.org/html/draft-ietf-httpbis-p1-messaging-14#section-7.1.3.1Acc
           # should remove hop-by-hop header fields
@@ -195,7 +199,17 @@ module ShopifyCLI
         end
 
         def request(method, path, headers: nil, query: [], form_data: nil, body_stream: nil)
-          uri = URI.join("https://#{shop}", path)
+          uri = URI.join("https://#{@theme.shop}", path)
+
+          if Environment.theme_access_password?
+            headers = headers ? headers.slice("ACCEPT", "CONTENT-TYPE", "CONTENT-LENGTH", "Cookie") : {}
+            headers.merge!({
+              "X-Shopify-Access-Token" => Environment.admin_auth_token,
+              "X-Shopify-Shop" => @theme.shop,
+            })
+            uri = URI.join("https://#{ThemeAccessAPI::BASE_URL}", "cli/sfr#{path}")
+          end
+
           uri.query = URI.encode_www_form(query + [[:_fd, 0], [:pb, 0]])
 
           @ctx.debug("Proxying #{method} #{uri}")

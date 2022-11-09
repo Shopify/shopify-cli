@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "test_helper"
 require "shopify_cli/theme/dev_server/proxy"
 require "shopify_cli/theme/development_theme"
@@ -51,6 +52,32 @@ module ShopifyCLI
           request.get("/")
         end
 
+        def test_get_is_proxied_to_theme_access_api_when_password_is_provided
+          Environment.stubs(:theme_access_password?).returns(true)
+          Environment.stubs(:store).returns("https://dev-theme-server-store.myshopify.com")
+          stub_request(:head, "https://theme-kit-access.shopifyapps.com/cli/sfr/?_fd=0&pb=0&preview_theme_id=123456789")
+            .with(
+              headers: { "X-Shopify-Shop" => "https://dev-theme-server-store.myshopify.com" },
+            )
+            .to_return(
+              status: 200,
+              headers: { "Set-Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}" },
+            )
+          stub_request(:get, "https://theme-kit-access.shopifyapps.com/cli/sfr/?_fd=0&pb=0")
+            .with(
+              headers: {
+                "Content-Length" => "0",
+                "Cookie" => "_secure_session_id=deadbeef",
+                "X-Shopify-Shop" => "https://dev-theme-server-store.myshopify.com",
+              },
+            )
+            .to_return(status: 200, body: "", headers: {})
+
+          request.get("/")
+
+          assert_requested(:get, "https://theme-kit-access.shopifyapps.com/cli/sfr/?_fd=0&pb=0")
+        end
+
         def test_refreshes_session_cookie_on_expiry
           stub_request(:get, "https://dev-theme-server-store.myshopify.com/?_fd=0&pb=0")
             .with(
@@ -82,14 +109,14 @@ module ShopifyCLI
             .with(
               headers: {
                 "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
-              }
+              },
             )
             .to_return(
               status: 200,
               body: "",
               headers: {
                 "Set-Cookie" => "_secure_session_id=#{new_secure_session_id}",
-              }
+              },
             )
 
           # GET / passing the new session cookie
@@ -97,7 +124,7 @@ module ShopifyCLI
             .with(
               headers: {
                 "Cookie" => "_secure_session_id=#{new_secure_session_id}",
-              }
+              },
             )
             .to_return(status: 200)
 
@@ -114,7 +141,7 @@ module ShopifyCLI
               },
               headers: default_proxy_headers.merge(
                 "Content-Type" => "application/x-www-form-urlencoded",
-              )
+              ),
             )
             .to_return(status: 200)
 
@@ -132,7 +159,7 @@ module ShopifyCLI
               headers: default_proxy_headers.merge(
                 "Content-Length" => "272",
                 "Content-Type" => "multipart/form-data; boundary=AaB03x",
-              )
+              ),
             )
             .to_return(status: 200)
 
@@ -221,7 +248,7 @@ module ShopifyCLI
             .with(
               headers: {
                 "Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
-              }
+              },
             )
 
           stub_session_id_request
@@ -234,7 +261,7 @@ module ShopifyCLI
             .with(
               headers: {
                 "Cookie" => "cart_currency=CAD; secure_customer_sig=; _secure_session_id=#{SECURE_SESSION_ID}",
-              }
+              },
             )
 
           stub_session_id_request
@@ -274,7 +301,7 @@ module ShopifyCLI
                 "Host" => "dev-theme-server-store.myshopify.com",
                 "X-Forwarded-For" => "",
                 "User-Agent" => "Shopify CLI",
-              }
+              },
             )
             .to_return(status: 200, body: "PROXY RESPONSE")
 
@@ -301,7 +328,7 @@ module ShopifyCLI
                   "layout/theme.liquid" => @theme["layout/theme.liquid"].read,
                 },
               },
-              headers: { "User-Agent" => "Shopify CLI" }
+              headers: { "User-Agent" => "Shopify CLI" },
             )
             .to_return(status: 200, body: <<-PROXY_RESPONSE)
               <html>
@@ -428,13 +455,13 @@ module ShopifyCLI
             .with(
               headers: {
                 "Host" => "dev-theme-server-store.myshopify.com",
-              }
+              },
             )
             .to_return(
               status: 200,
               headers: {
                 "Set-Cookie" => "_secure_session_id=#{SECURE_SESSION_ID}",
-              }
+              },
             )
         end
       end
