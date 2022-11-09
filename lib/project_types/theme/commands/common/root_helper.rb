@@ -42,6 +42,8 @@ module Theme
         end
 
         def current_directory_confirmed?
+          return false if @ctx.testing?
+
           Forms::ConfirmStore.ask(
             @ctx,
             [],
