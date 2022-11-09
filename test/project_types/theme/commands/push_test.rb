@@ -8,7 +8,7 @@ module Theme
 
       def setup
         super
-        Dir.chdir(ShopifyCLI::ROOT + "/test/fixtures/theme")
+        project_context("theme")
 
         ShopifyCLI::DB.stubs(:exists?).returns(true)
         ShopifyCLI::DB.stubs(:get).with(:shop).returns("test.myshopify.com")

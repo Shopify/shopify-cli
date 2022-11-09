@@ -9,7 +9,7 @@ module Theme
 
       def setup
         super
-        Dir.chdir(ShopifyCLI::ROOT + "/test/fixtures/theme")
+        project_context("theme")
         @ctx = ShopifyCLI::Context.new
       end
 
