@@ -212,7 +212,7 @@ module ShopifyCLI
         end
 
         def update_progress_bar(size, total)
-          @update_progress_bar_block.call(size, total)
+          @update_progress_bar_block&.call(size, total)
         end
 
         # Handler errors
