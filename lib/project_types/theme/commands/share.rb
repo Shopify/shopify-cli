@@ -17,7 +17,7 @@ module Theme
 
       def call(_args, name)
         root = root_value(options, name)
-        return unless theme_directory?(root) || current_directory_confirmed?
+        return if invalid_theme_directory?(root)
 
         theme = create_theme(root)
 

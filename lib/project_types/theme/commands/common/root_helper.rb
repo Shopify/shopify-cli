@@ -37,6 +37,18 @@ module Theme
           "."
         end
 
+        def invalid_theme_directory?(root)
+          return false if theme_directory?(root)
+
+          !current_directory_confirmed?
+        end
+
+        def exist_and_not_empty?(root)
+          Dir.exist?(root) && !Dir[File.join(root, "*")].empty?
+        end
+
+        private
+
         def theme_directory?(root)
           Theme::Models::SpecificationHandlers::Theme.new(root).valid?
         end
@@ -51,12 +63,6 @@ module Theme
             force: options.flags[:force],
           ).confirmed?
         end
-
-        def exist_and_empty?(root)
-          Dir.exist?(root) && Dir["#{root}/*"].empty?
-        end
-
-        private
 
         def default_argv(options)
           options.parser.default_argv.compact
