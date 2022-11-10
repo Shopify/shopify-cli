@@ -11,14 +11,12 @@ module Theme
           root = ShopifyCLI::ROOT + "/test/fixtures/theme"
           theme_directory = Theme.new(root)
           assert theme_directory.valid?
-          assert_empty(theme_directory.send(:missing_folders))
         end
 
         def test_missing_folders
           root = ShopifyCLI::ROOT + "/test/fixtures/theme_with_missing_folders"
           theme_directory = Theme.new(root)
           refute theme_directory.valid?
-          assert_equal ["sections/", "templates/"], theme_directory.send(:missing_folders)
         end
       end
     end
