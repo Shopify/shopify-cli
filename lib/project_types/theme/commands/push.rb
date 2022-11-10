@@ -44,7 +44,7 @@ module Theme
 
       def call(_args, name)
         root = root_value(options, name)
-        return if invalid_theme_directory?(root)
+        return unless valid_theme_directory?(root)
 
         delete = !options.flags[:nodelete]
         theme = find_theme(root, **options.flags)

@@ -37,10 +37,9 @@ module Theme
           "."
         end
 
-        def invalid_theme_directory?(root)
-          return false if theme_directory?(root)
-
-          !current_directory_confirmed?
+        def valid_theme_directory?(root)
+          Theme::Models::SpecificationHandlers::Theme.new(root).valid? ||
+            current_directory_confirmed?
         end
 
         def exist_and_not_empty?(root)
@@ -48,10 +47,6 @@ module Theme
         end
 
         private
-
-        def theme_directory?(root)
-          Theme::Models::SpecificationHandlers::Theme.new(root).valid?
-        end
 
         def current_directory_confirmed?
           return false if @ctx.testing?
