@@ -9,77 +9,68 @@ module Theme
 
       def setup
         super
-        project_context("theme")
         @ctx = ShopifyCLI::Context.new
+        @root = ShopifyCLI::ROOT + "/test/fixtures/theme"
       end
 
       def test_serve_command
         ShopifyCLI::Theme::DevServer
           .expects(:start)
-          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
+          .with(@ctx, @root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
 
-        run_serve_command
+        run_serve_command([@root])
       end
 
       def test_can_specify_bind_address
-        ShopifyCLI::Theme::DevServer.expects(:start).with(@ctx, ".", host: "0.0.0.0")
+        ShopifyCLI::Theme::DevServer.expects(:start).with(@ctx, @root, host: "0.0.0.0")
 
-        run_serve_command do |command|
+        run_serve_command([@root]) do |command|
           command.options.flags[:host] = "0.0.0.0"
         end
       end
 
       def test_can_specify_port
         ShopifyCLI::Theme::DevServer.expects(:start)
-          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, port: 9293)
+          .with(@ctx, @root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST, port: 9293)
 
-        run_serve_command do |command|
+        run_serve_command([@root]) do |command|
           command.options.flags[:port] = 9293
         end
       end
 
       def test_with_stable
         ShopifyCLI::Theme::DevServer.expects(:start)
-          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, stable: true)
+          .with(@ctx, @root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST, stable: true)
 
-        run_serve_command do |command|
+        run_serve_command([@root]) do |command|
           command.options.flags[:stable] = true
         end
       end
 
       def test_can_specify_poll
         ShopifyCLI::Theme::DevServer.expects(:start)
-          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true)
+          .with(@ctx, @root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST, poll: true)
 
-        run_serve_command do |command|
+        run_serve_command([@root]) do |command|
           command.options.flags[:poll] = true
         end
       end
 
       def test_can_specify_editor_sync
         ShopifyCLI::Theme::DevServer.expects(:start)
-          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, editor_sync: true)
+          .with(@ctx, @root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST, editor_sync: true)
 
-        run_serve_command do |command|
+        run_serve_command([@root]) do |command|
           command.options.flags[:editor_sync] = true
         end
-      end
-
-      def test_can_specify_root
-        specified_root = ShopifyCLI::ROOT + "/test/fixtures/theme"
-
-        ShopifyCLI::Theme::DevServer.expects(:start)
-          .with(@ctx, specified_root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST)
-
-        run_serve_command([specified_root])
       end
 
       def test_can_specify_theme
         ShopifyCLI::Theme::DevServer
           .expects(:start)
-          .with(@ctx, ".", host: Theme::Command::Serve::DEFAULT_HTTP_HOST, theme: 1234)
+          .with(@ctx, @root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST, theme: 1234)
 
-        run_serve_command do |command|
+        run_serve_command([@root]) do |command|
           command.options.flags[:theme] = 1234
         end
       end
