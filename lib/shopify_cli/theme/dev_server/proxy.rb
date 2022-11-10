@@ -199,13 +199,13 @@ module ShopifyCLI
         end
 
         def request(method, path, headers: nil, query: [], form_data: nil, body_stream: nil)
-          uri = URI.join("https://#{@theme.shop}", path)
+          uri = URI.join("https://#{shop}", path)
 
           if Environment.theme_access_password?
             headers = headers ? headers.slice("ACCEPT", "CONTENT-TYPE", "CONTENT-LENGTH", "Cookie") : {}
             headers.merge!({
               "X-Shopify-Access-Token" => Environment.admin_auth_token,
-              "X-Shopify-Shop" => @theme.shop,
+              "X-Shopify-Shop" => shop,
             })
             uri = URI.join("https://#{ThemeAccessAPI::BASE_URL}", "cli/sfr#{path}")
           end
