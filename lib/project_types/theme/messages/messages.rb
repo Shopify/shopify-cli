@@ -82,7 +82,6 @@ module Theme
                 {{command:-p, --publish}}          Publish as the live theme after uploading.
                 {{command:-o, --only}}             Upload only the specified files (Multiple flags allowed).
                 {{command:-x, --ignore}}           Skip uploading the specified files (Multiple flags allowed).
-                {{command:-f, --force}}            Proceed without confirmation, if current directory does not seem to be theme directory.
 
               Run without options to select theme from a list.
           HELP
@@ -130,7 +129,6 @@ module Theme
               {{command:-o, --only}}              Hot reload only files that match the specified pattern.
               {{command:-x, --ignore}}            Skip hot reloading any files that match the specified pattern.
               {{command:-e, --theme-editor-sync}} Synchronize Theme Editor updates in the local theme files.
-              {{command:-f, --force}}             Proceed without confirmation, if current directory does not seem to be theme directory.
               {{command:--port=PORT}}             Local port to serve theme preview from.
               {{command:--poll}}                  Force polling to detect file changes.
               {{command:--host=HOST}}             Set which network interface the web server listens on. The default value is 127.0.0.1.
@@ -333,7 +331,6 @@ module Theme
               {{command:-n, --nodelete}}         Runs the pull command without deleting local files.
               {{command:-o, --only}}             Download only the specified files (Multiple flags allowed).
               {{command:-x, --ignore}}           Skip downloading the specified files (Multiple flags allowed).
-              {{command:-f, --force}}            Proceed without confirmation, if current directory does not seem to be theme directory.
 
             Run without options to select theme from a list.
           HELP
@@ -385,9 +382,6 @@ module Theme
                                  Works like an alias to {{command:theme push -u -t=RANDOMIZED_NAME}}.
 
             Usage: {{command:%s theme share [ ROOT ]}}
-
-            Options:
-              {{command:-f, --force}} Proceed without confirmation, if current directory does not seem to be theme directory.
           HELP
           done: <<~DONE,
             {{green:The {{bold:%s}} theme was pushed successfully}}
