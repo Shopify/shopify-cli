@@ -116,7 +116,7 @@ module Theme
 
         @command.options.flags[:theme] = 1234
         @command.call([], "pull")
-
+      ensure
         FileUtils.rmdir(specified_root)
       end
 
