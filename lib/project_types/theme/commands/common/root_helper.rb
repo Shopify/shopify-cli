@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "project_types/theme/models/specification_handlers/theme"
+
 module Theme
   class Command
     module Common
@@ -35,7 +37,27 @@ module Theme
           "."
         end
 
+        def valid_theme_directory?(root)
+          Theme::Models::SpecificationHandlers::Theme.new(root).valid? ||
+            current_directory_confirmed?
+        end
+
+        def exist_and_not_empty?(root)
+          Dir.exist?(root) && !Dir[File.join(root, "*")].empty?
+        end
+
         private
+
+        def current_directory_confirmed?
+          raise "Current theme directory can't be confirmed during tests" if @ctx.testing?
+
+          Forms::ConfirmStore.ask(
+            @ctx,
+            [],
+            title: @ctx.message("theme.confirm_current_directory"),
+            force: options.flags[:force],
+          ).confirmed?
+        end
 
         def default_argv(options)
           options.parser.default_argv.compact

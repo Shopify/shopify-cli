@@ -34,12 +34,15 @@ module Theme
           flags[:ignores] ||= []
           flags[:ignores] |= pattern
         end
+        parser.on("-f", "--force") { flags[:force] = true }
       end
 
       def call(_args, name)
         valid_authentication_method!
 
         root = root_value(options, name)
+        return unless valid_theme_directory?(root)
+
         flags = options.flags.dup
         host = flags[:host] || DEFAULT_HTTP_HOST
 
