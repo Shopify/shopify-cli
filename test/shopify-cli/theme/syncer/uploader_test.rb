@@ -90,7 +90,7 @@ module ShopifyCLI
             syncer,
             delete_remote_assets,
             delay_low_priority_files
-          ) {}
+          )
         end
 
         def syncer
