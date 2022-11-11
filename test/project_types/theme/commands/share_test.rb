@@ -8,11 +8,12 @@ module Theme
       def setup
         super
         @command = Theme::Command::Share.new(ctx)
+        @root = ShopifyCLI::ROOT + "/test/fixtures/theme"
       end
 
       def test_share
         ShopifyCLI::Theme::Theme.expects(:create_unpublished)
-          .with(ctx, root: ".")
+          .with(ctx, root: @root)
           .returns(theme)
 
         ShopifyCLI::Theme::Syncer.expects(:new)
@@ -22,6 +23,8 @@ module Theme
         syncer.expects(:start_threads)
         syncer.expects(:shutdown)
         syncer.expects(:upload_theme!)
+
+        stubs_command_parser([@root])
 
         io = capture_io { @command.call([], "share") }.join
 
@@ -61,6 +64,12 @@ module Theme
 
       def ctx
         @ctx ||= ShopifyCLI::Context.new
+      end
+
+      def stubs_command_parser(argv)
+        argv = ["shopify", "theme", "share"] + argv
+        parser = @command.options.parser
+        parser.stubs(:default_argv).returns(argv)
       end
     end
   end
