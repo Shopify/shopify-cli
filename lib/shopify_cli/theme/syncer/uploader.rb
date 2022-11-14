@@ -220,7 +220,7 @@ module ShopifyCLI
 
           error_message = syncer
             .parse_api_errors(file, error)
-            .map { |error_message| "#{file_path}: #{error_message}" }
+            .map { |msg| "#{file_path}: #{msg}" }
             .join("\n")
 
           syncer.report_file_error(file, error_message)
