@@ -83,13 +83,29 @@ module ShopifyCLI
           uploader.delete_files!
         end
 
+        def test_report
+          file = theme["layout/theme.liquid"]
+          error = StandardError.new
+
+          syncer
+            .stubs(:parse_api_errors)
+            .with(file, error)
+            .returns(["Unknown error"])
+
+          syncer
+            .expects(:report_file_error)
+            .with(file, "layout/theme.liquid: Unknown error")
+
+          uploader.send(:report, file, error)
+        end
+
         private
 
         def uploader(delete_remote_assets: true, delay_low_priority_files: false)
           @uploader ||= Uploader.new(
             syncer,
             delete_remote_assets,
-            delay_low_priority_files
+            delay_low_priority_files,
           )
         end
 
@@ -100,7 +116,7 @@ module ShopifyCLI
             include_filter: nil,
             ignore_filter: nil,
             overwrite_json: true,
-            stable: false
+            stable: false,
           ).tap do |syncer|
             syncer.stubs(:wait!).returns(nil)
           end
