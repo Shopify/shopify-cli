@@ -11,17 +11,11 @@
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
   <img src="https://img.shields.io/badge/Powered%20by-Ruby-red" alt="Powered by Ruby">
 
-
 Shopify CLI 2.0 is a command line to help you build on Shopify. It's available as a Ruby gem and can be run and installed on Mac, Linux, and Windows systems.
 
-## Note on Shopify CLI 2.0 versus Shopify CLI 3.0 ##
+## CLI Deprecation & Sunset
 
-Use 2.0 for developing themes. For developing apps and custom storefronts, we recommend using [Shopify CLI 3.0](https://github.com/Shopify/cli).
-
-
-## Installation 
-
-Check out our [installation steps](docs/users/installation.md).
+Note that Shopify 2.0 is deprecated and will be [sunset on May 31, 2023](https://shopify.dev/changelog/cli-2-0-to-be-sunset-on-may-31-2023). We encourage using [Shopify CLI 3.0](https://github.com/Shopify/cli) to develop apps, custom storefronts, and themes. 
 
 ## Contributing 👩‍💻
 
