@@ -9,6 +9,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Fixed
 * [#2683](https://github.com/Shopify/shopify-cli/pull/2683): Fix timeout issue with the `shopify theme push` command and the `--json` flag
+* [#2688](https://github.com/Shopify/shopify-cli/pull/2688): Fix `shopify theme push` to report pushes with errors
 
 ## Version 2.31.0 - 2022-11-07
 

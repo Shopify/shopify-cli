@@ -47,7 +47,7 @@ module ShopifyCLI
               key: "assets/theme.css",
               value: @theme["assets/theme.css"].read,
             },
-          })
+          }),
         ).returns([
           200,
           {
@@ -76,7 +76,7 @@ module ShopifyCLI
               key: "assets/logo.png",
               attachment: Base64.encode64(@theme["assets/logo.png"].read),
             },
-          })
+          }),
         ).returns([
           200,
           {
@@ -104,7 +104,7 @@ module ShopifyCLI
             asset: {
               key: "assets/theme.css",
             },
-          })
+          }),
         ).returns([
           200,
           {
@@ -128,7 +128,7 @@ module ShopifyCLI
             method: "GET",
             shop: @theme.shop,
             path: "themes/#{@theme.id}/assets.json",
-            query: "asset%5Bkey%5D=assets%2Ftheme.css"
+            query: "asset%5Bkey%5D=assets%2Ftheme.css",
           )
           .returns([200, { "asset" => { "value" => "new content" } }, {}])
 
@@ -163,7 +163,7 @@ module ShopifyCLI
             method: "GET",
             shop: @theme.shop,
             path: "themes/#{@theme.id}/assets.json",
-            query: "asset%5Bkey%5D=assets%2Flogo.png"
+            query: "asset%5Bkey%5D=assets%2Flogo.png",
           )
           .returns([200, {}, {}])
 
@@ -194,7 +194,6 @@ module ShopifyCLI
           method: "GET",
           shop: @theme.shop,
           path: "themes/#{@theme.id}/assets.json",
-
         ).returns([
           200,
           {
@@ -219,7 +218,6 @@ module ShopifyCLI
           api_version: "unstable",
           method: "GET",
           path: "themes/#{@theme.id}/assets.json",
-
         ).returns([
           200,
           {
@@ -446,7 +444,7 @@ module ShopifyCLI
           api_version: "unstable",
           method: "GET",
           shop: @theme.shop,
-          path: "themes/#{@theme.id}/assets.json"
+          path: "themes/#{@theme.id}/assets.json",
         ).returns([
           200,
           { "assets" => response_assets },
@@ -465,7 +463,7 @@ module ShopifyCLI
               asset: {
                 key: "assets/removed.css",
               },
-            )
+            ),
           ))
           .returns([200, {}, {}])
 
@@ -514,7 +512,7 @@ module ShopifyCLI
           12:30:59 {{red:ERROR }} {{>}} {{blue:update sections/footer.liquid}}:
             An error
             Then some
-          EOS
+        EOS
 
         @syncer.start_threads
         file = @theme["sections/footer.liquid"]
@@ -525,7 +523,7 @@ module ShopifyCLI
               "An error",
               "Then some\nThis is truncated",
             ],
-          }
+          },
         )
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
@@ -542,7 +540,7 @@ module ShopifyCLI
         @ctx.expects(:error).with(<<~EOS.chomp)
           12:30:59 {{red:ERROR }} {{>}} {{blue:update sections/footer.liquid}}:
             message
-          EOS
+        EOS
 
         @syncer.start_threads
         file = @theme["sections/footer.liquid"]
@@ -550,7 +548,7 @@ module ShopifyCLI
         response_body = JSON.generate(
           errors: {
             message: "oops",
-          }
+          },
         )
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
@@ -631,7 +629,7 @@ module ShopifyCLI
         @ctx.expects(:error).with(<<~EOS.chomp)
           12:30:59 {{red:ERROR }} {{>}} {{blue:update sections/footer.liquid}}:
             message
-          EOS
+        EOS
         file.stubs(checksum: "modified")
         time_freeze do
           @syncer.enqueue_updates([file])
@@ -658,7 +656,7 @@ module ShopifyCLI
               "An error",
               "Then some",
             ],
-          }
+          },
         )
 
         ShopifyCLI::AdminAPI.expects(:rest_request)
@@ -712,7 +710,7 @@ module ShopifyCLI
       end
 
       def test_parse_valid_theme_asset_with_errors
-        operation = stub(file: "sections/footer.liquid", method: "update")
+        file = "sections/footer.liquid"
         expected_error = ["Something is wrong with this theme file."]
         body = {
           "errors" => {
@@ -721,13 +719,13 @@ module ShopifyCLI
         }
         error = ShopifyCLI::API::APIRequestError.new(body, response: { body: body })
 
-        actual_error = @syncer.send(:parse_api_errors, operation, error)
+        actual_error = @syncer.parse_api_errors(file, error)
 
         assert_equal(expected_error, actual_error)
       end
 
       def test_parse_invalid_theme_asset_with_many_errors
-        operation = stub(file: "package.json", method: "update")
+        file = "package.json"
         expected_error = [
           "This is not a valid theme file",
           "Please check the file type",
@@ -737,30 +735,30 @@ module ShopifyCLI
         }
         error = ShopifyCLI::API::APIRequestError.new(body, response: { body: body })
 
-        actual_error = @syncer.send(:parse_api_errors, operation, error)
+        actual_error = @syncer.parse_api_errors(file, error)
 
         assert_equal(expected_error, actual_error)
       end
 
       def test_parse_invalid_theme_asset_with_a_single_error
-        operation = stub(file: "package.json", method: "update")
+        file = "package.json"
         error = "This is not a valid theme file"
         body = {
           "errors" => error,
         }
         err = ShopifyCLI::API::APIRequestError.new(body, response: { body: body })
 
-        actual_error = @syncer.send(:parse_api_errors, operation, err)
+        actual_error = @syncer.parse_api_errors(file, err)
         expected_error = [error]
 
         assert_equal(expected_error, actual_error)
       end
 
       def test_parse_api_errors_wiht_a_standard_errors
-        operation = stub(file: "package.json", method: "update")
+        file = "package.json"
         error = Errno::EADDRINUSE.new
 
-        actual_error = @syncer.send(:parse_api_errors, operation, error)
+        actual_error = @syncer.parse_api_errors(file, error)
         expected_error = ["Address already in use"]
 
         assert_equal(expected_error, actual_error)
