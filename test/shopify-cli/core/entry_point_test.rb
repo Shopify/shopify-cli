@@ -70,6 +70,7 @@ module ShopifyCLI
 
         @context.stubs(
           development?: false,
+          new_version: nil,
           testing?: false
         )
         @context.expects(:warn).with(create_app_message).once
@@ -85,6 +86,7 @@ module ShopifyCLI
 
         @context.stubs(
           development?: false,
+          new_version: nil,
           testing?: false
         )
         @context.expects(:warn).with(create_app_message).once
@@ -100,6 +102,7 @@ module ShopifyCLI
 
         @context.stubs(
           development?: false,
+          new_version: nil,
           testing?: false
         )
         @context.expects(:warn).with(app_message).once
@@ -115,6 +118,7 @@ module ShopifyCLI
 
         @context.stubs(
           development?: false,
+          new_version: nil,
           testing?: false
         )
         @context.expects(:warn).with(theme_message).once
