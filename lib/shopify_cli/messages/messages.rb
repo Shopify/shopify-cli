@@ -804,6 +804,22 @@ module ShopifyCLI
               Already have CLI 3.0 installed? Run it using your node package manager, as explained here:
               {{underline:https://shopify.dev/apps/tools/cli/cli-2#running-shopify-cli-2-x-and-3-x-in-the-same-environment}}
           MESSAGE
+
+          sunset: <<~MESSAGE,
+            {{*}} {{yellow:Note that CLI 2.x will be sunset on May 31, 2023.}}
+          MESSAGE
+
+          sunset_create_app: <<~MESSAGE,
+            {{*}} {{yellow:Note that this CLI 2.x command will be sunset on April 28, 2023. Check here for instructions on how to migrate over to CLI 3.x: {{underline:https://shopify.dev/apps/tools/cli/migrate}}.}}
+          MESSAGE
+
+          sunset_app: <<~MESSAGE,
+            {{*}} {{yellow:Note that CLI 2.x will be sunset on May 31, 2023. Check here for instructions on how to migrate over to CLI 3.x: {{underline:https://shopify.dev/apps/tools/cli/migrate}}.}}
+          MESSAGE
+
+          sunset_theme: <<~MESSAGE,
+            {{*}} {{yellow:Note that CLI 2.x will be sunset on May 31, 2023. Check here for instructions on how to migrate over to CLI 3.x: {{underline:https://shopify.dev/themes/tools/cli/migrate}}.}}
+          MESSAGE
         },
         reporting: {
           help: <<~HELP,
