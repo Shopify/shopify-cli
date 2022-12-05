@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.32.1 - 2022-12-05
+
 ### Fixed
 * [#2694](https://github.com/Shopify/shopify-cli/pull/2694): Add sunset warnings
 
