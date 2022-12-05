@@ -128,7 +128,8 @@ module ShopifyCLI
       private
 
       def new_version_message
-        "{{*}} {{yellow:A new version of Shopify CLI is available! You have version 2.32.0 and the latest version is "\
+        "{{*}} {{yellow:A new version of Shopify CLI is available! "\
+        "You have version #{ShopifyCLI::VERSION} and the latest version is "\
           "2.99.0.\n\n  To upgrade, follow the instructions for the package manager you’re using:\n  "\
           "{{underline:https://shopify.dev/themes/tools/cli/upgrade-uninstall}}}}\n\n"
       end
