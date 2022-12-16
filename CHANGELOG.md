@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2701](https://github.com/Shopify/shopify-cli/pull/2701): Update theme-check to 1.12.1 (introduce intelligent code completion)
+
 ## Version 2.32.1 - 2022-12-05
 
 ### Fixed
