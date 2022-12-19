@@ -121,6 +121,7 @@ module ShopifyCLI
 
       def wait!
         raise ThreadError, "No syncer threads" if @threads.empty?
+
         total = size
         last_size = size
         until empty? || @queue.closed?
@@ -134,7 +135,7 @@ module ShopifyCLI
 
       def fetch_checksums!
         _status, response = api_client.get(
-          path: "themes/#{@theme.id}/assets.json"
+          path: "themes/#{@theme.id}/assets.json",
         )
         update_checksums(response)
       end
@@ -151,6 +152,7 @@ module ShopifyCLI
             loop do
               operation = @queue.pop
               break if operation.nil? # shutdown was called
+
               perform(operation)
             rescue Exception => e # rubocop:disable Lint/RescueException
               error_suffix = ": #{e}"
@@ -195,7 +197,7 @@ module ShopifyCLI
       end
 
       def handle_operation_error(operation, error)
-        error_suffix = ":\n  " + parse_api_errors(operation, error).join("\n  ")
+        error_suffix = ":\n  " + parse_api_errors(operation.file, error).join("\n  ")
         report_error(operation, error_suffix)
       end
 
@@ -206,6 +208,7 @@ module ShopifyCLI
       def update_checksums(api_response)
         api_response.values.flatten.each do |asset|
           next unless asset["key"]
+
           checksums[asset["key"]] = asset["checksum"]
         end
 
@@ -217,6 +220,33 @@ module ShopifyCLI
 
         @error_checksums << checksums[path]
         @error_reporter.report(error_message)
+      end
+
+      def parse_api_errors(file, exception)
+        parsed_body = {}
+
+        if exception.respond_to?(:response)
+          response = exception.response
+
+          parsed_body = if response&.is_a?(Hash)
+            response&.[](:body)
+          else
+            JSON.parse(response&.body)
+          end
+        end
+
+        errors = parsed_body.dig("errors") # either nil or another type
+        errors = errors.dig("asset") if errors&.is_a?(Hash)
+
+        message = errors || parsed_body["message"] || exception.message
+        # Truncate to first lines
+        [message].flatten.map { |m| m.split("\n", 2).first }
+      rescue JSON::ParserError
+        [exception.message]
+      rescue StandardError => e
+        cause = "(cause: #{e.message})"
+        backtrace = e.backtrace.join("\n")
+        ["The asset #{file} could not be synced #{cause} #{backtrace}"]
       end
 
       private
@@ -256,6 +286,7 @@ module ShopifyCLI
 
       def perform(operation)
         return if @queue.closed?
+
         wait_for_backoff!
         @ctx.debug(operation.to_s)
 
@@ -263,7 +294,6 @@ module ShopifyCLI
 
         report_performed_operation(operation)
         backoff_if_near_limit!(response)
-
       rescue StandardError => error
         handle_operation_error(operation, error)
       ensure
@@ -283,7 +313,7 @@ module ShopifyCLI
 
         _status, body, response = api_client.put(
           path: path,
-          body: JSON.generate(asset: asset)
+          body: JSON.generate(asset: asset),
         )
         file.warnings = body.dig("asset", "warnings")
 
@@ -315,7 +345,7 @@ module ShopifyCLI
           path: "themes/#{@theme.id}/assets.json",
           body: JSON.generate(asset: {
             key: file.relative_path,
-          })
+          }),
         )
 
         response
@@ -340,33 +370,6 @@ module ShopifyCLI
         enqueue(:update, file)
 
         response
-      end
-
-      def parse_api_errors(operation, exception)
-        parsed_body = {}
-
-        if exception.respond_to?(:response)
-          response = exception.response
-
-          parsed_body = if response&.is_a?(Hash)
-            response&.[](:body)
-          else
-            JSON.parse(response&.body)
-          end
-        end
-
-        errors = parsed_body.dig("errors") # either nil or another type
-        errors = errors.dig("asset") if errors&.is_a?(Hash)
-
-        message = errors || parsed_body["message"] || exception.message
-        # Truncate to first lines
-        [message].flatten.map { |m| m.split("\n", 2).first }
-      rescue JSON::ParserError
-        [exception.message]
-      rescue StandardError => e
-        cause = "(cause: #{e.message})"
-        backtrace = e.backtrace.join("\n")
-        ["The asset #{operation.file} could not be synced #{cause} #{backtrace}"]
       end
 
       def theme_created_at_runtime?

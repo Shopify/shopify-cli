@@ -26,13 +26,11 @@ module ShopifyCLI
           :ignore_file?,
           :overwrite_json?,
           :bulk_updates_activated?,
-
           # enqueue
           :enqueue_deletes,
           :enqueue_get,
           :enqueue_union_merges,
           :enqueue_updates,
-
           # checksums
           :checksums,
           :update_checksums,
@@ -112,7 +110,7 @@ module ShopifyCLI
           retries = 0
           pending_items = files.map { |file| bulk_item(file) }
 
-          while pending_items.any? && retries < 4
+          while pending_items.any? && retries < 2
             bulk = Bulk.new(ctx, theme, api_client)
 
             files
@@ -183,7 +181,7 @@ module ShopifyCLI
             [
               theme["config/settings_schema.json"],
               theme["config/settings_data.json"],
-            ]
+            ],
           )
         end
 
@@ -212,13 +210,19 @@ module ShopifyCLI
         end
 
         def update_progress_bar(size, total)
-          @update_progress_bar_block.call(size, total)
+          @update_progress_bar_block&.call(size, total)
         end
 
         # Handler errors
 
-        def report(file, _error)
-          error_message = "The asset #{file.relative_path} could not be uploaded.\n#{e.inspect}"
+        def report(file, error)
+          file_path = file.relative_path
+
+          error_message = syncer
+            .parse_api_errors(file, error)
+            .map { |msg| "#{file_path}: #{msg}" }
+            .join("\n")
+
           syncer.report_file_error(file, error_message)
         end
       end

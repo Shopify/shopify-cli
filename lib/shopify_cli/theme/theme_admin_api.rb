@@ -61,6 +61,7 @@ module ShopifyCLI
         if empty_response?(error)
           return permission_error
         elsif unauthorized_response?(error)
+          @ctx.debug("[#{self.class}] (#{error.class}) cause: #{response_body(error)}")
           raise ShopifyCLI::Abort, @ctx.message("theme.unauthorized_error", @shop)
         end
 

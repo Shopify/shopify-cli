@@ -11,8 +11,14 @@ module Theme
 
       recommend_default_ruby_range
 
+      options do |parser, flags|
+        parser.on("-f", "--force") { flags[:force] = true }
+      end
+
       def call(_args, name)
         root = root_value(options, name)
+        return unless valid_theme_directory?(root)
+
         theme = create_theme(root)
 
         upload(theme)

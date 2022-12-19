@@ -108,4 +108,12 @@ class ShopifyCliAT2 < Formula
       RUBY
     end
   end
+
+  def post_install
+    message = <<~POSTINSTALL_MESSAGE
+      Note that Shopify CLI 2.x will be sunset on May 31, 2023.
+      More info: https://shopify.dev/changelog/cli-2-0-to-be-sunset-on-may-31-2023
+    POSTINSTALL_MESSAGE
+    message.each_line { |line| ohai line.chomp }
+  end
 end

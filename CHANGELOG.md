@@ -4,6 +4,21 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ### Added
 * [#2681](https://github.com/Shopify/shopify-cli/pull/2681): Enable Theme Access passwords for theme serve
+* [#2701](https://github.com/Shopify/shopify-cli/pull/2701): Update theme-check to 1.12.1 (introduce intelligent code completion)
+
+## Version 2.32.1 - 2022-12-05
+
+### Fixed
+* [#2694](https://github.com/Shopify/shopify-cli/pull/2694): Add sunset warnings
+
+## Version 2.32.0 - 2022-11-14
+
+### Added
+* [#2680](https://github.com/Shopify/shopify-cli/pull/2680): Validate on `shopify theme share/pull/push/serve` if users are running the command in a theme/empty directory
+
+### Fixed
+* [#2683](https://github.com/Shopify/shopify-cli/pull/2683): Fix timeout issue with the `shopify theme push` command and the `--json` flag
+* [#2688](https://github.com/Shopify/shopify-cli/pull/2688): Fix `shopify theme push` to report pushes with errors
 
 ## Version 2.31.0 - 2022-11-07
 
