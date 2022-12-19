@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.33.0 - 2022-12-19
+
 ### Added
 * [#2681](https://github.com/Shopify/shopify-cli/pull/2681): Enable Theme Access passwords for theme serve
 * [#2701](https://github.com/Shopify/shopify-cli/pull/2701): Update theme-check to 1.12.1 (introduce intelligent code completion)
