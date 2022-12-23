@@ -1,5 +1,24 @@
 ## Releasing Shopify CLI
 
+This page contains instructions for CLI 2.0. If you are looking for instructions for CLI 3.0, please visit the [CLI 3.0 documentation](https://github.com/Shopify/cli/blob/main/docs/release.md).
+
+### Automated process
+
+We release the CLI with a series of Rake tasks run locally, interspersed with PR-based checkpoints. The steps are:
+
+1. `export GITHUB_ACCESS_TOKEN=$(dev github print-auth | grep Password | awk '{print $NF}')`
+2. `rake "release:prepare[2.x.x]"` (where 2.x.x is the version being released)
+3. PR to shopify-cli will open in your browser. Sanity-check and merge.
+4. Trigger [Shipit](https://shipit.shopify.io/shopify/shopify-cli/rubygems) on your version commit to release on RubyGems
+5. `rake release:package`
+6. Homebrew PR will open in your browser. Sanity-check and merge.
+7. Release will also be opened in your browser, check that it includes debian and rpm files.
+8. Go through all the [PRs labeled with includes-post-release-steps](https://github.com/Shopify/shopify-cli/issues?q=label%3Aincludes-post-release-steps+is%3Aclosed) and follow the post-release steps described in those PRs. Delete the labels afterward.
+
+In case the automation goes wrong, try with the manual instructions.
+
+### Manual process
+
 1. Check the Semantic Versioning page for info on how to version the new release: http://semver.org
 2. Make sure you're on the most recent `main`
    ```
