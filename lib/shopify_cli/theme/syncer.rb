@@ -348,6 +348,8 @@ module ShopifyCLI
           }),
         )
 
+        checksums.delete(file) if checksums.has?(file)
+
         response
       end
 

@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2706](https://github.com/Shopify/shopify-cli/pull/2706): Delete checksum after file deletion
+
 ## Version 2.33.0 - 2022-12-19
 
 ### Added

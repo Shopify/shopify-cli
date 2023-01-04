@@ -20,6 +20,12 @@ module ShopifyCLI
           file.checksum != checksum_by_key[file.relative_path]
         end
 
+        def delete(file)
+          checksums_mutex.synchronize do
+            checksum_by_key.delete(to_key(file))
+          end
+        end
+
         def keys
           checksum_by_key.keys
         end
