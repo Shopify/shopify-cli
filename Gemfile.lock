@@ -4,7 +4,7 @@ PATH
     shopify-cli (2.33.1)
       bugsnag (~> 6.22)
       listen (~> 3.7.0)
-      theme-check (~> 1.13.0)
+      theme-check (~> 1.14.0)
 
 GEM
   remote: https://rubygems.org/
@@ -150,7 +150,7 @@ GEM
       faraday (> 0.8, < 2.0)
     sys-uname (1.2.2)
       ffi (~> 1.1)
-    theme-check (1.13.0)
+    theme-check (1.14.0)
       liquid (>= 5.4.0)
       nokogiri (>= 1.12)
       parser (~> 3)
