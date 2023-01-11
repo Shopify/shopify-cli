@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Added
+* [#2714](https://github.com/Shopify/shopify-cli/pull/2714): Update theme-check to 1.13.0 (introduce section groups support)
+
 ## Version 2.33.1 - 2023-01-09
 
 ### Fixed
