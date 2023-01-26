@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2721](https://github.com/Shopify/shopify-cli/pull/2721): Do not `replace_asset_urls` in font bodies
+
 ## Version 2.34.0 - 2023-01-11
 
 ### Added
