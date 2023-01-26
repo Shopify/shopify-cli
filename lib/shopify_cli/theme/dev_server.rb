@@ -41,6 +41,7 @@ module ShopifyCLI
           port: 9292,
           poll: false,
           editor_sync: false,
+          overwrite_json: false,
           stable: false,
           mode: ReloadMode.default,
           includes: nil,
@@ -55,6 +56,7 @@ module ShopifyCLI
             port,
             poll,
             editor_sync,
+            overwrite_json,
             stable,
             mode,
             includes,
@@ -78,6 +80,7 @@ module ShopifyCLI
         port,
         poll,
         editor_sync,
+        overwrite_json,
         stable,
         mode,
         includes,
@@ -91,6 +94,7 @@ module ShopifyCLI
         @port = port
         @poll = poll
         @editor_sync = editor_sync
+        @overwrite_json = overwrite_json
         @stable = stable
         @mode = mode
         @includes = includes
@@ -199,7 +203,7 @@ module ShopifyCLI
           theme: theme,
           include_filter: include_filter,
           ignore_filter: ignore_filter,
-          overwrite_json: !editor_sync,
+          overwrite_json: !editor_sync || @overwrite_json,
           stable: stable
         )
       end

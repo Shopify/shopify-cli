@@ -35,6 +35,7 @@ module Theme
           flags[:ignores] |= pattern
         end
         parser.on("-f", "--force") { flags[:force] = true }
+        parser.on("--overwrite-json") { flags[:overwrite_json] = true }
       end
 
       def call(_args, name)
