@@ -147,9 +147,10 @@ module ShopifyCLI
         private
 
         def dev_server(identifier: nil)
-          host, port, poll, editor_sync, stable, mode, ignores, includes = nil
+          host, port, poll, editor_sync, overwrite_json, stable, mode, ignores, includes = nil
           server = Extension::DevServer.instance
-          server.setup(ctx, root, host, identifier, port, poll, editor_sync, stable, mode, ignores, includes)
+          server.setup(ctx, root, host, identifier, port, poll, editor_sync, overwrite_json, stable, mode, ignores,
+            includes)
           server.project = project
           server.specification_handler = specification_handler
           server
