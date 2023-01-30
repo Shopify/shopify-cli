@@ -29,13 +29,14 @@ module ShopifyCLI
         end
 
         def call(env)
-          if env["PATH_INFO"].start_with?("/assets")
+          path_info = env["PATH_INFO"]
+          if path_info.start_with?("/assets")
             # Serve from disk
-            serve_file(env["PATH_INFO"])
+            serve_file(path_info)
           else
             # Proxy the request, and replace the URLs in the response
             status, headers, body = @app.call(env)
-            body = replace_asset_urls(body)
+            body = replace_asset_urls(body) unless path_info.start_with?("/fonts")
             [status, headers, body]
           end
         end
@@ -53,6 +54,10 @@ module ShopifyCLI
           end
 
           [replaced_body]
+        rescue ArgumentError => error
+          return [body.join] if error.message.include?("invalid byte sequence")
+
+          raise error
         end
 
         def serve_fail(status, body)

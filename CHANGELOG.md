@@ -2,6 +2,9 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2721](https://github.com/Shopify/shopify-cli/pull/2721): Do not `replace_asset_urls` in font bodies
+
 ### Added
 * [#2724](https://github.com/Shopify/shopify-cli/pull/2724): Introduce hidden `--overwrite-json` flag
 
