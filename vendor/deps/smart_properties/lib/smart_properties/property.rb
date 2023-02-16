@@ -157,7 +157,7 @@ module SmartProperties
     rescue NoMethodError => error
       # BasicObject does not respond to #nil? by default, so we need to double
       # check if somebody implemented it and it fails internally or if the
-      # error occured because the method is actually not present. In the former
+      # error occurred because the method is actually not present. In the former
       # case, we want to raise the exception because there is something wrong
       # with the implementation of object#nil?. In the latter case we treat the
       # object as truthy because we don't know better.

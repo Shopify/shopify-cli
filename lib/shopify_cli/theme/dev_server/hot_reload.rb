@@ -16,12 +16,15 @@ module ShopifyCLI
         end
 
         def call(env)
-          if env["PATH_INFO"] == "/hot-reload"
+          path = env["PATH_INFO"]
+          if path == "/hot-reload"
             create_stream
           else
             status, headers, body = @app.call(env)
 
-            body = inject_hot_reload_javascript(body) if request_is_html?(headers)
+            if request_is_html?(headers) && leads_to_injectable_body?(path)
+              body = inject_hot_reload_javascript(body)
+            end
 
             [status, headers, body]
           end
@@ -41,6 +44,10 @@ module ShopifyCLI
 
         def request_is_html?(headers)
           headers["content-type"]&.start_with?("text/html")
+        end
+
+        def leads_to_injectable_body?(path)
+          path !~ /web-pixels-manager.+sandbox/
         end
 
         def inject_hot_reload_javascript(body)

@@ -20,6 +20,9 @@ module Extension
         parser.on("-T", "--theme=NAME_OR_ID", "Theme ID or name of the theme app extension host theme.") do |theme|
           flags[:theme] = theme
         end
+        parser.on("--generate-tmp-theme", "Populate host theme, created by CLI 3, with assets") do |generate_tmp_theme|
+          flags[:generate_tmp_theme] = generate_tmp_theme
+        end
         parser.on("--api-key=API_KEY", "Connect your extension and app by inserting your app's API key") do |api_key|
           flags[:api_key] = api_key.gsub('"', "")
         end
@@ -45,6 +48,7 @@ module Extension
         property! :tunnel_requested, accepts: [true, false], reader: :tunnel_requested?, default: true
         property :port, accepts: (1...(2**16))
         property :theme, accepts: String, default: nil
+        property :generate_tmp_theme, accepts: [true, false], reader: :generate_tmp_theme?, default: false
         property :api_key, accepts: String, default: nil
         property :api_secret, accepts: String, default: nil
         property :registration_id, accepts: String, default: nil
@@ -60,6 +64,7 @@ module Extension
           resource_url: options.flags[:resource_url],
           port: options.flags[:port],
           theme: options.flags[:theme],
+          generate_tmp_theme: generate_tmp_theme?,
           api_key: options.flags[:api_key],
           api_secret: options.flags[:api_secret],
           registration_id: options.flags[:registration_id],
@@ -103,6 +108,10 @@ module Extension
         tunnel.nil? || !!tunnel
       end
 
+      def generate_tmp_theme?
+        options.flags[:generate_tmp_theme] == true
+      end
+
       def find_available_port(runtime_configuration)
         return runtime_configuration unless runtime_configuration.port.nil?
         return runtime_configuration unless specification_handler.choose_port?(@ctx)
@@ -137,6 +146,7 @@ module Extension
           tunnel_url: runtime_configuration.tunnel_url,
           port: runtime_configuration.port,
           theme: runtime_configuration.theme,
+          generate_tmp_theme: runtime_configuration.generate_tmp_theme?,
           api_key: runtime_configuration.api_key,
           api_secret: runtime_configuration.api_secret,
           registration_id: runtime_configuration.registration_id,

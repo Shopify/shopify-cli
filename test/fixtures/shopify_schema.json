@@ -25325,7 +25325,7 @@
             },
             {
               "name": "createdAt",
-              "description": "When the activity event occured.",
+              "description": "When the activity event occurred.",
               "args": [],
               "type": {
                 "kind": "NON_NULL",

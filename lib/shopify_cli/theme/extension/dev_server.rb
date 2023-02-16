@@ -26,12 +26,13 @@ module ShopifyCLI
         # Extensions
         ScriptInjector = ShopifyCLI::Theme::Extension::DevServer::HotReload::ScriptInjector
 
-        attr_accessor :project, :specification_handler
+        attr_accessor :project, :specification_handler, :generate_tmp_theme
 
         class << self
-          def start(ctx, root, port: 9292, theme: nil, project:, specification_handler:)
+          def start(ctx, root, port: 9292, theme: nil, generate_tmp_theme: false, project:, specification_handler:)
             instance.project = project
             instance.specification_handler = specification_handler
+            instance.generate_tmp_theme = generate_tmp_theme
 
             super(ctx, root, port: port, theme: theme)
           end
@@ -66,8 +67,10 @@ module ShopifyCLI
 
         def theme
           @theme ||= if theme_identifier
-            theme = ShopifyCLI::Theme::Theme.find_by_identifier(ctx, identifier: theme_identifier)
-            theme || ctx.abort(not_found_error_message)
+            theme = HostTheme.find_by_identifier(ctx, identifier: theme_identifier)
+            ctx.abort(not_found_error_message) unless theme
+            theme.generate_tmp_theme if generate_tmp_theme
+            theme
           else
             HostTheme.find_or_create!(ctx)
           end

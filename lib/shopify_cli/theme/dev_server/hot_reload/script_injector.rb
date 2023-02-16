@@ -25,7 +25,7 @@ module ShopifyCLI
               "</script>",
             ].join("\n")
 
-            body = body.join.gsub("</body>", "#{hot_reload_script}\n</body>")
+            body = body.join.sub("</body>", "#{hot_reload_script}\n</body>")
 
             [body]
           end

@@ -66,8 +66,7 @@ module Theme
       end
 
       def test_can_specify_theme
-        ShopifyCLI::Theme::DevServer
-          .expects(:start)
+        ShopifyCLI::Theme::DevServer.expects(:start)
           .with(@ctx, @root, host: Theme::Command::Serve::DEFAULT_HTTP_HOST, theme: 1234)
 
         run_serve_command([@root]) do |command|

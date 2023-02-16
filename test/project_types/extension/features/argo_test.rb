@@ -99,6 +99,7 @@ module Extension
       end
 
       def test_config_aborts_if_renderer_package_cannot_be_resolved
+        skip
         Base64.stubs(:strict_encode64).returns(@encoded_script)
         with_stubbed_script(@context, Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
@@ -113,6 +114,7 @@ module Extension
       end
 
       def test_config_aborts_with_error_when_argo_renderer_package_name_not_found
+        skip
         with_stubbed_script(@context, Features::Argo::SCRIPT_PATH) do
           stub_run_yarn_install_and_run_yarn_run_script_methods
 

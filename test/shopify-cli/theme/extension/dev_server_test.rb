@@ -24,7 +24,7 @@ module ShopifyCLI
         end
 
         def test_theme_when_theme_does_not_exist
-          Theme
+          HostTheme
             .expects(:find_by_identifier)
             .with(ctx, identifier: theme.id)
             .returns(nil)
@@ -37,7 +37,7 @@ module ShopifyCLI
         end
 
         def test_theme_with_valid_theme_id
-          Theme
+          HostTheme
             .expects(:find_by_identifier)
             .with(ctx, identifier: theme.id)
             .returns(theme)
@@ -46,7 +46,7 @@ module ShopifyCLI
         end
 
         def test_theme_with_valid_theme_name
-          Theme
+          HostTheme
             .expects(:find_by_identifier)
             .with(ctx, identifier: theme.name)
             .returns(theme)
@@ -55,7 +55,7 @@ module ShopifyCLI
         end
 
         def test_finds_or_creates_a_dev_theme_when_no_theme_specified
-          Theme
+          HostTheme
             .expects(:find_by_identifier).never
           HostTheme
             .expects(:find_or_create!)
