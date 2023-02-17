@@ -61,20 +61,9 @@ module ShopifyCLI
           new(ctx, root: nil).ensure_exists!
         end
 
-        private
-
-        def generate_host_theme_name
-          hostname = Socket.gethostname.split(".").shift
-          hash = SecureRandom.hex(3)
-
-          theme_name = "App Ext. Host ()"
-          hostname_character_limit = API_NAME_LIMIT - theme_name.length - hash.length - 1
-          identifier = encode_identifier("#{hash}-#{hostname[0, hostname_character_limit]}")
-          theme_name = "App Ext. Host (#{identifier})"
-
-          ShopifyCLI::DB.set(host_theme_name: theme_name)
-
-          theme_name
+        def self.find_by_identifier(ctx, root: nil, identifier:)
+          ShopifyCLI::DB.set(host_theme_id: identifier)
+          find(ctx, root: root)
         end
 
         def generate_tmp_theme
@@ -97,6 +86,22 @@ module ShopifyCLI
               syncer.shutdown
             end
           end
+        end
+
+        private
+
+        def generate_host_theme_name
+          hostname = Socket.gethostname.split(".").shift
+          hash = SecureRandom.hex(3)
+
+          theme_name = "App Ext. Host ()"
+          hostname_character_limit = API_NAME_LIMIT - theme_name.length - hash.length - 1
+          identifier = encode_identifier("#{hash}-#{hostname[0, hostname_character_limit]}")
+          theme_name = "App Ext. Host (#{identifier})"
+
+          ShopifyCLI::DB.set(host_theme_name: theme_name)
+
+          theme_name
         end
       end
     end

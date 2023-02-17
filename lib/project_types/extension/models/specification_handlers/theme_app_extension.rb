@@ -78,7 +78,7 @@ module Extension
           root = options[:context]&.root
           project = options[:project]
           properties = options
-            .slice(:port, :theme)
+            .slice(:port, :theme, :generate_tmp_theme)
             .compact
             .merge({
               project: project,
