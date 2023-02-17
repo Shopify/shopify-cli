@@ -24,7 +24,7 @@ module ShopifyCLI
         end
 
         def report(message)
-          ctx.puts(message) if @enabled
+          ctx.error(message) if @enabled
         end
       end
     end

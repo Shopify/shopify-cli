@@ -67,6 +67,7 @@ module Theme
         begin
           syncer.start_threads
           if options.flags[:json]
+            syncer.standard_reporter.disable!
             syncer.upload_theme!(delete: delete)
           else
             CLI::UI::Frame.open(@ctx.message("theme.push.info.pushing", theme.name, theme.id, theme.shop)) do

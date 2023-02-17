@@ -573,7 +573,7 @@ module ShopifyCLI
         @syncer.start_threads
 
         # Assert a single synced message
-        @ctx.expects(:puts)
+        @ctx.expects(:error)
           .with("12:30:59 {{green:Synced}} {{>}} {{blue:update #{file_path}}}").once
 
         file.stubs(checksum: "initial")
@@ -637,7 +637,7 @@ module ShopifyCLI
         end
 
         # Assert a single fix message
-        @ctx.expects(:puts).with("12:30:59 {{cyan:Fixed }} {{>}} {{blue:update sections/footer.liquid}}").once
+        @ctx.expects(:error).with("12:30:59 {{cyan:Fixed }} {{>}} {{blue:update sections/footer.liquid}}").once
         file.stubs(checksum: "initial")
         time_freeze do
           @syncer.enqueue_updates([file])
