@@ -5,7 +5,7 @@ module ShopifyCLI
     class Syncer
       ##
       # ShopifyCLI::Theme::Syncer::StdReporter allows disabling/enabling
-      # messages reported in the standard output (ShopifyCLI::Context#puts).
+      # messages reported in the standard error output (ShopifyCLI::Context#puts).
       #
       class StandardReporter
         attr_reader :ctx
