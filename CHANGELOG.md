@@ -5,7 +5,7 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 ### Fixed
 * [#2721](https://github.com/Shopify/shopify-cli/pull/2721): Do not `replace_asset_urls` in font bodies
 * [#2729](https://github.com/Shopify/shopify-cli/pull/2729): Do not inject hot-reload code into web-pixels-manager sandbox (from cli#1370)
-* [#0000](https://github.com/Shopify/shopify-cli/pull/0000): The CLI should not report IO messages when the `--json` flag is passed
+* [#2731](https://github.com/Shopify/shopify-cli/pull/2731): The CLI should not report IO messages when the `--json` flag is passed
 
 ### Added
 * [#2724](https://github.com/Shopify/shopify-cli/pull/2724): Introduce hidden `--overwrite-json` flag
