@@ -33,7 +33,7 @@ module ShopifyCLI
         :union_merge, # - Union merges the local file content with the remote file content
       ]
 
-      attr_reader :ctx, :theme, :checksums, :error_checksums, :api_client, :pending
+      attr_reader :ctx, :theme, :checksums, :error_checksums, :api_client, :pending, :standard_reporter
       attr_accessor :include_filter, :ignore_filter
 
       def_delegators :@error_reporter, :has_any_error?

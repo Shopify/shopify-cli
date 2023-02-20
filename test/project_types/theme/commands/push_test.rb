@@ -24,7 +24,7 @@ module Theme
           editor_url: "https://test.myshopify.io/",
           live?: false,
         )
-        @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: false)
+        @syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: false, standard_reporter: mock)
         @ignore_filter = mock("IgnoreFilter")
         @include_filter = mock("IncludeFilter")
 
@@ -226,6 +226,7 @@ module Theme
         @syncer.expects(:start_threads)
         @syncer.expects(:shutdown)
 
+        @syncer.standard_reporter.expects(:disable!)
         @syncer.expects(:upload_theme!).with(delete: true)
         @command.expects(:puts).with("{\"theme\":{}}")
 
@@ -239,7 +240,8 @@ module Theme
       end
 
       def test_push_when_syncer_has_an_error_json
-        syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: true)
+        syncer = stub("Syncer", lock_io!: nil, unlock_io!: nil, has_any_error?: true,
+          standard_reporter: stub(disable!: nil))
 
         ShopifyCLI::Theme::Theme.expects(:find_by_identifier)
           .with(@ctx, root: @root, identifier: 1234)
