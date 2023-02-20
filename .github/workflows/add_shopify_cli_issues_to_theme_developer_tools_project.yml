@@ -1,0 +1,17 @@
+# https://github.com/actions/add-to-project
+name: Add issues to the Theme Developer Tools project
+on:
+  issues:
+    types:
+      - opened
+      - labeled
+
+jobs:
+  add-to-project:
+    name: Add issues to the Theme Developer Tools project
+    runs-on: shopify-ubuntu-latest
+    steps:
+      - uses: actions/add-to-project@main
+        with:
+          project-url: https://github.com/orgs/Shopify/projects/2929
+          github-token: ${{ secrets.SHOPIFY_GH_ACCESS_TOKEN }}
