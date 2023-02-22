@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.35.0 - 2023-02-22
+
 ### Fixed
 * [#2721](https://github.com/Shopify/shopify-cli/pull/2721): Do not `replace_asset_urls` in font bodies
 * [#2729](https://github.com/Shopify/shopify-cli/pull/2729): Do not inject hot-reload code into web-pixels-manager sandbox (from cli#1370)
