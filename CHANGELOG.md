@@ -2,6 +2,12 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+### Fixed
+* [#2735](https://github.com/Shopify/shopify-cli/pull/2735): Remove theme directory confirmation during tests and make confirmation dialogue respect `SHOPIFY_CLI_TTY` (from cli#1369)
+
+### Added
+* [#2735](https://github.com/Shopify/shopify-cli/pull/2735): Pass development theme from CLI 3’s to CLI 2’s local storage (from cli#1410)
+
 ## Version 2.35.0 - 2023-02-22
 
 ### Fixed
