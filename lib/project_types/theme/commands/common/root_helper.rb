@@ -49,13 +49,14 @@ module Theme
         private
 
         def current_directory_confirmed?
-          raise "Current theme directory can't be confirmed during tests" if @ctx.testing?
+          return true if options.flags[:force]
 
+          @ctx.warn(@ctx.message("theme.current_directory_is_not_theme_directory"))
           Forms::ConfirmStore.ask(
             @ctx,
             [],
             title: @ctx.message("theme.confirm_current_directory"),
-            force: options.flags[:force],
+            force: !ShopifyCLI::Environment.interactive?,
           ).confirmed?
         end
 
