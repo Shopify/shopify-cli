@@ -41,6 +41,18 @@ module ShopifyCLI
           assert_equal(correct_output, request.get("/").body)
         end
 
+        def test_does_not_call_reload_script_injector_for_web_pixels_manager_sandbox
+          correct_output = "<html></html>"
+          app = lambda do |_env|
+            [200, { "content-type" => "text/html" }, [correct_output]]
+          end
+          stack = HotReload.new(@ctx, app, watcher: @watcher, mode: @mode)
+          request = Rack::MockRequest.new(stack)
+
+          assert_equal(correct_output, request.get("/web-pixels-manager@0.0.219/sandbox/").body)
+          assert_equal(correct_output, request.get("/wpm@0.0.233@6b2037/sandbox/").body)
+        end
+
         private
 
         def app

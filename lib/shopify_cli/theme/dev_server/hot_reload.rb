@@ -47,7 +47,7 @@ module ShopifyCLI
         end
 
         def leads_to_injectable_body?(path)
-          path !~ /web-pixels-manager.+sandbox/
+          path !~ /.+\/sandbox/
         end
 
         def inject_hot_reload_javascript(body)
