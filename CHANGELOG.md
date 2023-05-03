@@ -2,6 +2,8 @@ From version 2.6.0, the sections in this file adhere to the [keep a changelog](h
 
 ## [Unreleased]
 
+## Version 2.36.0 - 2023-05-03
+
 ### Fixed
 * [#2735](https://github.com/Shopify/shopify-cli/pull/2735): Remove theme directory confirmation during tests and make confirmation dialogue respect `SHOPIFY_CLI_TTY` (from cli#1369)
 * [#2737](https://github.com/Shopify/shopify-cli/pull/2737): Do not inject hot-reload code into web-pixels-manager sandbox (from cli#1568)
