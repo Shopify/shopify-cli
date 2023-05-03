@@ -19,7 +19,6 @@ module Extension
   class Command < ShopifyCLI::Command::ProjectCommand
     autoload :ExtensionCommand, Project.project_filepath("commands/extension_command")
 
-    subcommand :Create, "create", Project.project_filepath("commands/create")
     subcommand :Register, "register", Project.project_filepath("commands/register")
     subcommand :Info, "info", Project.project_filepath("commands/info")
     subcommand :Connect, "connect", Project.project_filepath("commands/connect")

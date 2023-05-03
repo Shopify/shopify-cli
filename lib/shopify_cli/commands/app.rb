@@ -4,7 +4,6 @@ module ShopifyCLI
   module Commands
     class App < ShopifyCLI::Command
       subcommand :Connect, "connect", "shopify_cli/commands/app/connect"
-      subcommand :Create, "create", "shopify_cli/commands/app/create"
       subcommand :Deploy, "deploy", "shopify_cli/commands/app/deploy"
       subcommand :Open, "open", "shopify_cli/commands/app/open"
       subcommand :Serve, "serve", "shopify_cli/commands/app/serve"
