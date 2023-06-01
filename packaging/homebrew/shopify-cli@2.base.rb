@@ -58,6 +58,7 @@ class ShopifyCliAT2 < Formula
   sha256 "SHOPIFY_CLI_GEM_CHECKSUM"
   depends_on "ruby"
   depends_on "git"
+  disable! date: "2023-05-31", because: "CLI2 sunset"
 
   def install
     # set GEM_HOME and GEM_PATH to make sure we package all the dependent gems
